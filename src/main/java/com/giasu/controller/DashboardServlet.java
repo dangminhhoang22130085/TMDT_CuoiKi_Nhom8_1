@@ -32,7 +32,7 @@ public class DashboardServlet extends HttpServlet {
             req.setAttribute("courses", courses);
             req.setAttribute("payments", payments);
             req.setAttribute("reviews", reviews);
-            req.getRequestDispatcher("/dashboard.jsp").forward(req, resp);
+            req.getRequestDispatcher("/jsp/auth/dashboard.jsp").forward(req, resp);
         } else if (account.getRole() == 1) {
             // Student dashboard
             Student student = (Student) session.getAttribute("userProfile");
@@ -41,7 +41,7 @@ public class DashboardServlet extends HttpServlet {
 
             req.setAttribute("bookings", bookings);
             req.setAttribute("payments", payments);
-            req.getRequestDispatcher("/student-dashboard.jsp").forward(req, resp);
+            req.getRequestDispatcher("/jsp/auth/dashboard.jsp").forward(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath() + "/admin/dashboard");
         }

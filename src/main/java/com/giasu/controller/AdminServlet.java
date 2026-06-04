@@ -87,13 +87,13 @@ public class AdminServlet extends HttpServlet {
         req.setAttribute("totalRevenue", totalRevenue);
         req.setAttribute("pendingTutors", pendingTutors);
         req.setAttribute("recentBookings", recentBookings);
-        req.getRequestDispatcher("/admin/dashboard.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/admin/dashboard.jsp").forward(req, resp);
     }
 
     private void showUsers(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Account> accounts = accountDAO.findAll();
         req.setAttribute("accounts", accounts);
-        req.getRequestDispatcher("/admin/users.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/admin/users.jsp").forward(req, resp);
     }
 
     private void showPayments(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -101,7 +101,7 @@ public class AdminServlet extends HttpServlet {
         long totalRevenue = paymentDAO.getTotalRevenue();
         req.setAttribute("payments", payments);
         req.setAttribute("totalRevenue", totalRevenue);
-        req.getRequestDispatcher("/admin/payments.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/admin/payments.jsp").forward(req, resp);
     }
 
     private void showTutorVerification(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -109,6 +109,6 @@ public class AdminServlet extends HttpServlet {
         List<Tutor> allTutors = tutorDAO.findAll();
         req.setAttribute("pendingTutors", pendingTutors);
         req.setAttribute("allTutors", allTutors);
-        req.getRequestDispatcher("/admin/tutors.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/admin/tutors.jsp").forward(req, resp);
     }
 }

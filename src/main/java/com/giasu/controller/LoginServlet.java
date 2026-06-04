@@ -22,7 +22,7 @@ public class LoginServlet extends HttpServlet {
             redirectByRole(req, resp, acc);
             return;
         }
-        req.getRequestDispatcher("/login.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/auth/login.jsp").forward(req, resp);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class LoginServlet extends HttpServlet {
         } else {
             req.setAttribute("error", "Email hoặc mật khẩu không đúng!");
             req.setAttribute("email", email);
-            req.getRequestDispatcher("/login.jsp").forward(req, resp);
+            req.getRequestDispatcher("/jsp/auth/login.jsp").forward(req, resp);
         }
     }
 

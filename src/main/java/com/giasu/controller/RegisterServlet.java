@@ -16,7 +16,7 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/register.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/auth/register.jsp").forward(req, resp);
     }
 
     @Override
@@ -31,13 +31,13 @@ public class RegisterServlet extends HttpServlet {
         // Validation
         if (!password.equals(confirmPassword)) {
             req.setAttribute("error", "Mật khẩu xác nhận không khớp!");
-            req.getRequestDispatcher("/register.jsp").forward(req, resp);
+            req.getRequestDispatcher("/jsp/auth/register.jsp").forward(req, resp);
             return;
         }
 
         if (accountDAO.findByEmail(email) != null) {
             req.setAttribute("error", "Email đã được sử dụng!");
-            req.getRequestDispatcher("/register.jsp").forward(req, resp);
+            req.getRequestDispatcher("/jsp/auth/register.jsp").forward(req, resp);
             return;
         }
 
@@ -100,10 +100,10 @@ public class RegisterServlet extends HttpServlet {
             }
 
             req.setAttribute("success", "Đăng ký thành công! Vui lòng đăng nhập.");
-            req.getRequestDispatcher("/login.jsp").forward(req, resp);
+            req.getRequestDispatcher("/jsp/auth/login.jsp").forward(req, resp);
         } else {
             req.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại!");
-            req.getRequestDispatcher("/register.jsp").forward(req, resp);
+            req.getRequestDispatcher("/jsp/auth/register.jsp").forward(req, resp);
         }
     }
 }

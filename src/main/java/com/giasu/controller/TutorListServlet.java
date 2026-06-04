@@ -36,6 +36,6 @@ public class TutorListServlet extends HttpServlet {
         req.setAttribute("keyword", keyword);
         req.setAttribute("selectedSpec", specialization);
         req.setAttribute("selectedRating", ratingStr);
-        req.getRequestDispatcher("/tutor-list.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/tutor/tutor-list.jsp").forward(req, resp);
     }
 }

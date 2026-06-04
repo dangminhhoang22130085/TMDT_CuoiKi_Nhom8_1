@@ -1,30 +1,25 @@
 -- ============================================
--- Gia Su Online - Database Schema
+-- Gia Su Online - Database Schema (PostgreSQL Version)
 -- ============================================
 
-SET FOREIGN_KEY_CHECKS = 0;
-
-DROP DATABASE IF EXISTS giasutot;
-CREATE DATABASE giasutot CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE giasutot;
+-- Xóa các bảng cũ nếu đã tồn tại (Sử dụng CASCADE để tự động xử lý ràng buộc khóa ngoại)
+DROP TABLE IF EXISTS interest CASCADE;
+DROP TABLE IF EXISTS review CASCADE;
+DROP TABLE IF EXISTS lesson CASCADE;
+DROP TABLE IF EXISTS registered_subjects CASCADE;
+DROP TABLE IF EXISTS payment CASCADE;
+DROP TABLE IF EXISTS notifications CASCADE;
+DROP TABLE IF EXISTS booking CASCADE;
+DROP TABLE IF EXISTS course CASCADE;
+DROP TABLE IF EXISTS tutor CASCADE;
+DROP TABLE IF EXISTS student CASCADE;
+DROP TABLE IF EXISTS subject CASCADE;
+DROP TABLE IF EXISTS account CASCADE;
 
 -- ============================================
 -- Bảng account - Tài khoản đăng nhập
 -- role: 1=Student/PhuHuynh, 2=Tutor, 3=Admin
 -- ============================================
-DROP TABLE IF EXISTS interest;
-DROP TABLE IF EXISTS review;
-DROP TABLE IF EXISTS lesson;
-DROP TABLE IF EXISTS registered_subjects;
-DROP TABLE IF EXISTS payment;
-DROP TABLE IF EXISTS notifications;
-DROP TABLE IF EXISTS booking;
-DROP TABLE IF EXISTS course;
-DROP TABLE IF EXISTS tutor;
-DROP TABLE IF EXISTS student;
-DROP TABLE IF EXISTS subject;
-DROP TABLE IF EXISTS account;
-
 CREATE TABLE account (
     id CHAR(20) PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -32,8 +27,8 @@ CREATE TABLE account (
     role INT DEFAULT 1 CHECK (role IN (1, 2, 3)),
     status VARCHAR(50) NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
     reset_token VARCHAR(255),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- ============================================
 -- Bảng student - Phụ huynh / Học sinh
@@ -48,7 +43,7 @@ CREATE TABLE student (
     avatar VARCHAR(255) DEFAULT 'default-avatar.png',
     account_id CHAR(20),
     FOREIGN KEY (account_id) REFERENCES account(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 -- ============================================
 -- Bảng subject - Môn học
@@ -60,7 +55,7 @@ CREATE TABLE subject (
     description TEXT,
     fee DECIMAL(12) NOT NULL,
     status VARCHAR(50) NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive'))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 -- ============================================
 -- Bảng tutor - Gia sư
@@ -74,15 +69,15 @@ CREATE TABLE tutor (
     address VARCHAR(255) NOT NULL,
     specialization VARCHAR(255) NOT NULL,
     description TEXT,
-    id_card_number BIGINT(12) NOT NULL,
-    bank_account_number BIGINT(15) NOT NULL,
+    id_card_number BIGINT NOT NULL,
+    bank_account_number BIGINT NOT NULL,
     bank_name VARCHAR(255) NOT NULL,
     avatar VARCHAR(255) DEFAULT 'default-avatar.png',
     account_id CHAR(20),
     evaluate INT DEFAULT 0 CHECK (evaluate BETWEEN 0 AND 5),
-    verified TINYINT(1) DEFAULT 0,
+    verified SMALLINT DEFAULT 0,
     FOREIGN KEY (account_id) REFERENCES account(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 -- ============================================
 -- Bảng course - Khóa học
@@ -91,11 +86,11 @@ CREATE TABLE course (
     id CHAR(20) PRIMARY KEY,
     subject_id CHAR(20),
     tutor_id CHAR(20),
-    time DATETIME NOT NULL,
+    time TIMESTAMP NOT NULL,
     status VARCHAR(50) DEFAULT 'active',
     FOREIGN KEY (subject_id) REFERENCES subject(id),
     FOREIGN KEY (tutor_id) REFERENCES tutor(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 -- ============================================
 -- Bảng registered_subjects - Đăng ký khóa học
@@ -109,7 +104,7 @@ CREATE TABLE registered_subjects (
     PRIMARY KEY (course_id, student_id),
     FOREIGN KEY (course_id) REFERENCES course(id),
     FOREIGN KEY (student_id) REFERENCES student(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 -- ============================================
 -- Bảng lesson - Buổi học
@@ -118,11 +113,11 @@ CREATE TABLE lesson (
     course_id CHAR(20),
     student_id CHAR(20),
     status VARCHAR(50) NOT NULL CHECK (status IN ('completed', 'absent', 'scheduled')),
-    time DATETIME NOT NULL,
+    time TIMESTAMP NOT NULL,
     PRIMARY KEY (course_id, student_id, time),
     FOREIGN KEY (course_id) REFERENCES course(id),
     FOREIGN KEY (student_id) REFERENCES student(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 -- ============================================
 -- Bảng booking - Đặt lịch
@@ -132,14 +127,14 @@ CREATE TABLE booking (
     course_id CHAR(20),
     tutor_id CHAR(20),
     student_id CHAR(20),
-    booking_time DATETIME NOT NULL,
+    booking_time TIMESTAMP NOT NULL,
     status VARCHAR(50) NOT NULL CHECK (status IN ('pending','confirmed','cancelled')),
     note TEXT,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (course_id) REFERENCES course(id),
     FOREIGN KEY (tutor_id) REFERENCES tutor(id),
     FOREIGN KEY (student_id) REFERENCES student(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 -- ============================================
 -- Bảng payment - Thanh toán
@@ -150,13 +145,13 @@ CREATE TABLE payment (
     tutor_id CHAR(20) NOT NULL,
     student_id CHAR(20) NOT NULL,
     amount DECIMAL(12) NOT NULL,
-    payment_date DATETIME NOT NULL,
+    payment_date TIMESTAMP NOT NULL,
     payment_method VARCHAR(50) DEFAULT 'bank_transfer',
     status VARCHAR(50) NOT NULL CHECK (status IN ('completed', 'pending', 'failed')),
     FOREIGN KEY (course_id) REFERENCES course(id),
     FOREIGN KEY (tutor_id) REFERENCES tutor(id),
     FOREIGN KEY (student_id) REFERENCES student(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 -- ============================================
 -- Bảng notifications - Thông báo
@@ -167,11 +162,11 @@ CREATE TABLE notifications (
     title VARCHAR(255),
     message TEXT NOT NULL,
     type VARCHAR(50) DEFAULT 'info',
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    is_read TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    is_read SMALLINT DEFAULT 0,
     status VARCHAR(50) NOT NULL DEFAULT 'sent' CHECK (status IN ('sent', 'pending', 'failed')),
     FOREIGN KEY (account_id) REFERENCES account(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 -- ============================================
 -- Bảng review - Đánh giá gia sư
@@ -183,11 +178,11 @@ CREATE TABLE review (
     course_id CHAR(20),
     rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
     comment TEXT,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (tutor_id) REFERENCES tutor(id),
     FOREIGN KEY (student_id) REFERENCES student(id),
     FOREIGN KEY (course_id) REFERENCES course(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
 -- ============================================
 -- Bảng interest - Quan tâm (yêu thích gia sư)
@@ -198,9 +193,8 @@ CREATE TABLE interest (
     PRIMARY KEY (id_st, id_tt),
     FOREIGN KEY (id_st) REFERENCES student(id),
     FOREIGN KEY (id_tt) REFERENCES tutor(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+);
 
-SET FOREIGN_KEY_CHECKS = 1;
 
 -- ============================================
 -- DỮ LIỆU MẪU

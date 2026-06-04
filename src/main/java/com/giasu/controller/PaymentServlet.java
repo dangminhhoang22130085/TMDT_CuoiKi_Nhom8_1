@@ -31,7 +31,7 @@ public class PaymentServlet extends HttpServlet {
         }
 
         req.setAttribute("payments", payments);
-        req.getRequestDispatcher("/payment.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/payment.jsp").forward(req, resp);
     }
 
     @Override
@@ -69,6 +69,6 @@ public class PaymentServlet extends HttpServlet {
         // Reload payments
         List<Payment> payments = paymentDAO.findByStudentId(student.getId());
         req.setAttribute("payments", payments);
-        req.getRequestDispatcher("/payment.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/payment.jsp").forward(req, resp);
     }
 }

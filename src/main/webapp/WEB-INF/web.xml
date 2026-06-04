@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         xsi:schemaLocation="
+         http://java.sun.com/xml/ns/javaee
+         http://java.sun.com/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
     <display-name>Gia Su Online</display-name>
@@ -11,6 +14,7 @@
         <filter-name>EncodingFilter</filter-name>
         <filter-class>com.giasu.filter.EncodingFilter</filter-class>
     </filter>
+
     <filter-mapping>
         <filter-name>EncodingFilter</filter-name>
         <url-pattern>/*</url-pattern>
@@ -21,22 +25,27 @@
         <filter-name>AuthFilter</filter-name>
         <filter-class>com.giasu.filter.AuthFilter</filter-class>
     </filter>
+
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/dashboard/*</url-pattern>
     </filter-mapping>
+
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/admin/*</url-pattern>
     </filter-mapping>
+
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/booking</url-pattern>
     </filter-mapping>
+
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/payment</url-pattern>
     </filter-mapping>
+
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/profile</url-pattern>
@@ -44,7 +53,7 @@
 
     <!-- Welcome file -->
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>jsp/home/index.jsp</welcome-file>
     </welcome-file-list>
 
     <!-- Error pages -->
@@ -52,13 +61,15 @@
         <error-code>404</error-code>
         <location>/error/404.jsp</location>
     </error-page>
+
     <error-page>
         <error-code>500</error-code>
         <location>/error/500.jsp</location>
     </error-page>
 
-    <!-- Session timeout (30 minutes) -->
+    <!-- Session timeout -->
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
+
 </web-app>

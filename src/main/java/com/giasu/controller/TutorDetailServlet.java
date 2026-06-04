@@ -39,6 +39,6 @@ public class TutorDetailServlet extends HttpServlet {
         req.setAttribute("courses", courses);
         req.setAttribute("reviews", reviews);
         req.setAttribute("avgRating", avgRating);
-        req.getRequestDispatcher("/tutor-detail.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/tutor/tutor-detail.jsp").forward(req, resp);
     }
 }

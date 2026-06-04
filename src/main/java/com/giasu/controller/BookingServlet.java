@@ -47,7 +47,7 @@ public class BookingServlet extends HttpServlet {
             req.setAttribute("selectedCourse", course);
         }
 
-        req.getRequestDispatcher("/booking.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
     }
 
     @Override
@@ -86,6 +86,6 @@ public class BookingServlet extends HttpServlet {
             req.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại!");
         }
 
-        req.getRequestDispatcher("/booking.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
     }
 }
