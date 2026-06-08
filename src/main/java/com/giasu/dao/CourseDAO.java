@@ -73,4 +73,30 @@ public class CourseDAO {
 
         return c;
     }
+
+    public boolean registerCourse(String courseId, String studentId, int lessons, String status) {
+        String sql = "INSERT INTO registered_subjects (course_id, student_id, registration_date, number_of_lessons, status) VALUES (?, ?, CURRENT_DATE, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, courseId);
+            ps.setString(2, studentId);
+            ps.setInt(3, lessons);
+            ps.setString(4, status);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) { e.printStackTrace(); }
+        return false;
+    }
+
+    public boolean isStudentRegistered(String courseId, String studentId) {
+        String sql = "SELECT 1 FROM registered_subjects WHERE course_id = ? AND student_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, courseId);
+            ps.setString(2, studentId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return false;
+    }
 }

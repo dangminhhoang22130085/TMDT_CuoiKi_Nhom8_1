@@ -10,6 +10,7 @@ public class Account {
     private String status;
     private String resetToken;
     private Timestamp createdAt;
+    private String name; // Display name
 
     public Account() {}
 
@@ -42,6 +43,9 @@ public class Account {
 
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
     public String getRoleName() {
         switch (role) {
