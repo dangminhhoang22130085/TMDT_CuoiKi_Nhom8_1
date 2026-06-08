@@ -145,7 +145,7 @@ public class TutorDAO {
             ps.setString(11, t.getBankName());
             ps.setString(12, t.getAccountId());
             ps.setInt(13, t.getEvaluate());
-            ps.setBoolean(14, t.isVerified());
+            ps.setInt(14, t.isVerified() ? 1 : 0);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) { e.printStackTrace(); }
         return false;
@@ -174,7 +174,7 @@ public class TutorDAO {
         String sql = "UPDATE tutor SET verified = ? WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setBoolean(1, verified);
+            ps.setInt(1, verified ? 1 : 0);
             ps.setString(2, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) { e.printStackTrace(); }

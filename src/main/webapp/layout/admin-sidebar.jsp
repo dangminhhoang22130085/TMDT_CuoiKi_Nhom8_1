@@ -33,6 +33,11 @@
             <span>Thanh Toán</span>
         </a>
 
+        <a href="<c:url value='/admin/complaints'/>" class="sidebar-link ${param.activePage == 'complaints' ? 'active' : ''}">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Giải Quyết Khiếu Nại</span>
+        </a>
+
         <div class="sidebar-divider"></div>
 
         <a href="<c:url value='/'/>" class="sidebar-link">

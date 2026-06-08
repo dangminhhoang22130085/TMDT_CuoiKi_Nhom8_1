@@ -78,7 +78,7 @@
                                 <c:forEach var="course" items="${requestScope.courses}">
                                     <option value="${course.id}" 
                                         ${requestScope.selectedCourse.id == course.id ? 'selected' : ''}>
-                                        ${course.name} - ${course.price}đ/giờ
+                                        ${course.subject.name} (${course.subject.level}) - ${course.subject.formattedFee}/giờ
                                     </option>
                                 </c:forEach>
                             </select>

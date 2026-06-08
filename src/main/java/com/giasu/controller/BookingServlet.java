@@ -24,10 +24,35 @@ public class BookingServlet extends HttpServlet {
         String action = req.getParameter("action");
 
         if ("confirm".equals(action) || "cancel".equals(action)) {
-            // Tutor confirms or cancels booking
             String bookingId = req.getParameter("id");
-            String status = "confirm".equals(action) ? "confirmed" : "cancelled";
-            bookingDAO.updateStatus(bookingId, status);
+            Booking booking = bookingDAO.findById(bookingId);
+            if (booking != null) {
+                boolean authorized = false;
+                if (account.getRole() == 3) {
+                    authorized = true;
+                } else if (account.getRole() == 2) {
+                    Tutor tutor = (Tutor) session.getAttribute("userProfile");
+                    if (tutor != null && booking.getTutorId().equals(tutor.getId())) {
+                        authorized = true;
+                    }
+                } else if (account.getRole() == 1 && "cancel".equals(action)) {
+                    Student student = (Student) session.getAttribute("userProfile");
+                    if (student != null && booking.getStudentId().equals(student.getId())) {
+                        authorized = true;
+                    }
+                }
+
+                if (authorized) {
+                    String status = "confirm".equals(action) ? "confirmed" : "cancelled";
+                    bookingDAO.updateStatus(bookingId, status);
+
+                    if ("confirmed".equals(status) && booking.getCourseId() != null) {
+                        if (!courseDAO.isStudentRegistered(booking.getCourseId(), booking.getStudentId())) {
+                            courseDAO.registerCourse(booking.getCourseId(), booking.getStudentId(), 10, "pending_payment");
+                        }
+                    }
+                }
+            }
             resp.sendRedirect(req.getContextPath() + "/dashboard");
             return;
         }
@@ -65,6 +90,15 @@ public class BookingServlet extends HttpServlet {
         String tutorId = req.getParameter("tutorId");
         String bookingTimeStr = req.getParameter("bookingTime");
         String note = req.getParameter("note");
+
+        if (tutorId == null || tutorId.trim().isEmpty()) {
+            if (courseId != null && !courseId.trim().isEmpty()) {
+                Course c = courseDAO.findById(courseId);
+                if (c != null) {
+                    tutorId = c.getTutorId();
+                }
+            }
+        }
 
         Booking booking = new Booking();
         booking.setId(bookingDAO.generateNextId());
