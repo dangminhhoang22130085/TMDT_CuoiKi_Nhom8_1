@@ -312,3 +312,9 @@ INSERT INTO interest (id_st, id_tt) VALUES
 ('st001', 'tut004'),
 ('st002', 'tut002'),
 ('st003', 'tut003');
+
+UPDATE tutor SET avatar = 'giasutoan-TuanCanh.png' WHERE id = 'tut001';
+UPDATE tutor SET avatar = 'giasuTiengAnh-TranThiMai.png' WHERE id = 'tut002';
+UPDATE tutor SET avatar = 'giasuHoaHoc-LeHoangMinh.png' WHERE id = 'tut003';
+UPDATE tutor SET avatar = 'giasuVatLi-PhamMinhHuong.png' WHERE id = 'tut004';
+UPDATE tutor SET avatar = 'giasuNguVan-NguyenThuHa.png' WHERE id = 'tut005';

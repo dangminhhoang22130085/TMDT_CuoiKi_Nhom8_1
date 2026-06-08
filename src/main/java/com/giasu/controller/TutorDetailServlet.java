@@ -17,6 +17,7 @@ public class TutorDetailServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println(">>> Đã vào được TutorDetailServlet! ID: " + req.getParameter("id"));
         String tutorId = req.getParameter("id");
         if (tutorId == null || tutorId.isEmpty()) {
             resp.sendRedirect(req.getContextPath() + "/tutors");
