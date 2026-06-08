@@ -83,7 +83,7 @@ public class TutorDAO {
         List<Object> params = new ArrayList<>();
 
         if (keyword != null && !keyword.trim().isEmpty()) {
-            sql.append(" AND (t.name LIKE ? OR t.specialization LIKE ? OR t.address LIKE ?)");
+            sql.append(" AND (t.name ILIKE ? OR t.specialization ILIKE ? OR t.address ILIKE ?)");
             String kw = "%" + keyword.trim() + "%";
             params.add(kw); params.add(kw); params.add(kw);
         }

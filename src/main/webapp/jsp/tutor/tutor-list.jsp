@@ -99,8 +99,7 @@
                                     <div class="tutor-list-image">
                                         <c:choose>
                                             <c:when test="${not empty tutor.avatar}">
-                                                <img src="${tutor.avatar}" alt="${tutor.name}">
-                                            </c:when>
+                                                <img src="${pageContext.request.contextPath}/images/tutors/${tutor.avatar}" alt="${tutor.name}">                                            </c:when>
                                             <c:otherwise>
                                                 <div class="avatar-placeholder-large">
                                                     <i class="fas fa-user"></i>
@@ -150,7 +149,7 @@
                                         </div>
 
                                         <div class="tutor-actions">
-                                            <a href="<c:url value='/tutor-detail?id=${tutor.id}'/>" class="btn btn-primary">
+                                            <a href="${pageContext.request.contextPath}/tutor-detail?id=${tutor.id}" class="btn btn-primary">
                                                 <i class="fas fa-eye"></i> Xem Chi Tiết
                                             </a>
                                             <a href="<c:url value='/booking?tutorId=${tutor.id}'/>" class="btn btn-success">
