@@ -77,8 +77,10 @@ public class StudentDAO {
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                String lastId = rs.getString("id");
-                int num = Integer.parseInt(lastId.replace("st", "")) + 1;
+                String lastId = rs.getString("id").trim();
+                int num = Integer.parseInt(
+                        lastId.replace("st", "").trim()
+                ) + 1;
                 return String.format("st%03d", num);
             }
         } catch (SQLException e) { e.printStackTrace(); }
