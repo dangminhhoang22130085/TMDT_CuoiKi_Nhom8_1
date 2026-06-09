@@ -8,13 +8,13 @@ public class Complaint {
     private String studentId;
     private String title;
     private String description;
-    private String status; // pending, resolved, rejected
+    private String status;
     private Timestamp createdAt;
     private Timestamp resolvedAt;
 
     // Join fields
-    private Student student;
     private Booking booking;
+    private Student student;
 
     public Complaint() {}
 
@@ -42,16 +42,19 @@ public class Complaint {
     public Timestamp getResolvedAt() { return resolvedAt; }
     public void setResolvedAt(Timestamp resolvedAt) { this.resolvedAt = resolvedAt; }
 
-    public Student getStudent() { return student; }
-    public void setStudent(Student student) { this.student = student; }
-
     public Booking getBooking() { return booking; }
     public void setBooking(Booking booking) { this.booking = booking; }
 
+    public Student getStudent() { return student; }
+    public void setStudent(Student student) { this.student = student; }
+
     public String getStatusDisplay() {
-        if ("pending".equals(status)) return "Đang chờ xử lý";
-        if ("resolved".equals(status)) return "Đã giải quyết";
-        if ("rejected".equals(status)) return "Đã từ chối";
-        return status;
+        if (status == null) return "Chưa xác định";
+        switch (status) {
+            case "pending": return "Chờ xử lý";
+            case "resolved": return "Đã giải quyết";
+            case "rejected": return "Bị từ chối";
+            default: return status;
+        }
     }
 }
