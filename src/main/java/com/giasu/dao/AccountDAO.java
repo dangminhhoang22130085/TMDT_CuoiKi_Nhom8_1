@@ -57,7 +57,7 @@ public class AccountDAO {
         String sql = "INSERT INTO account (id, email, password, role, status) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, acc.getId());
+            ps.setString(1, acc.getId().trim());
             ps.setString(2, acc.getEmail());
             ps.setString(3, acc.getPassword());
             ps.setInt(4, acc.getRole());
@@ -127,18 +127,33 @@ public class AccountDAO {
     }
 
     public String generateNextId() {
+
         String sql = "SELECT id FROM account ORDER BY id DESC LIMIT 1";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+
+        try (
+                Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()
+        ) {
+
             if (rs.next()) {
-                String lastId = rs.getString("id");
-                int num = Integer.parseInt(lastId.replace("acc", "")) + 1;
+
+                // FIX POSTGRESQL CHAR(20)
+                String lastId = rs.getString("id").trim();
+
+                int num = Integer.parseInt(
+                        lastId.replace("acc", "")
+                );
+
+                num++;
+
                 return String.format("acc%03d", num);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return "acc001";
     }
 

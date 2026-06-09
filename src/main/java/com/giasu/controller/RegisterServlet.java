@@ -1,109 +1,226 @@
 package com.giasu.controller;
 
-import com.giasu.dao.*;
-import com.giasu.model.*;
-import javax.servlet.*;
+import com.giasu.dao.AccountDAO;
+import com.giasu.dao.StudentDAO;
+import com.giasu.dao.TutorDAO;
+import com.giasu.model.Account;
+import com.giasu.model.Student;
+import com.giasu.model.Tutor;
+
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+
 import java.io.IOException;
 import java.sql.Date;
 
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
-    private AccountDAO accountDAO = new AccountDAO();
-    private StudentDAO studentDAO = new StudentDAO();
-    private TutorDAO tutorDAO = new TutorDAO();
+
+    private final AccountDAO accountDAO = new AccountDAO();
+    private final StudentDAO studentDAO = new StudentDAO();
+    private final TutorDAO tutorDAO = new TutorDAO();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/jsp/auth/register.jsp").forward(req, resp);
+    protected void doGet(HttpServletRequest req,
+                         HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        req.getRequestDispatcher("/jsp/auth/register.jsp")
+                .forward(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String email = req.getParameter("email");
-        String password = req.getParameter("password");
-        String confirmPassword = req.getParameter("confirmPassword");
-        String name = req.getParameter("name");
-        String phone = req.getParameter("phone");
-        int roleType = Integer.parseInt(req.getParameter("role"));
+    protected void doPost(HttpServletRequest req,
+                          HttpServletResponse resp)
+            throws ServletException, IOException {
 
-        // Validation
-        if (!password.equals(confirmPassword)) {
-            req.setAttribute("error", "Mật khẩu xác nhận không khớp!");
-            req.getRequestDispatcher("/jsp/auth/register.jsp").forward(req, resp);
-            return;
-        }
+        try {
 
-        if (accountDAO.findByEmail(email) != null) {
-            req.setAttribute("error", "Email đã được sử dụng!");
-            req.getRequestDispatcher("/jsp/auth/register.jsp").forward(req, resp);
-            return;
-        }
+            req.setCharacterEncoding("UTF-8");
 
-        // Create account
-        Account account = new Account();
-        account.setId(accountDAO.generateNextId());
-        account.setEmail(email);
-        account.setPassword(password);
-        account.setRole(roleType);
-        account.setStatus("active");
+            String email = req.getParameter("email");
+            String password = req.getParameter("password");
+            String confirmPassword = req.getParameter("confirmPassword");
+            String name = req.getParameter("name");
+            String phone = req.getParameter("phone");
 
-        if (accountDAO.insert(account)) {
+            int roleType = Integer.parseInt(
+                    req.getParameter("role")
+            );
+
+            // VALIDATE
+
+            if (!password.equals(confirmPassword)) {
+
+                req.setAttribute(
+                        "error",
+                        "Mật khẩu xác nhận không khớp!"
+                );
+
+                req.getRequestDispatcher("/jsp/auth/register.jsp")
+                        .forward(req, resp);
+
+                return;
+            }
+
+            // CHECK EMAIL
+
+            if (accountDAO.findByEmail(email) != null) {
+
+                req.setAttribute(
+                        "error",
+                        "Email đã tồn tại!"
+                );
+
+                req.getRequestDispatcher("/jsp/auth/register.jsp")
+                        .forward(req, resp);
+
+                return;
+            }
+
+            // INSERT ACCOUNT
+
+            Account acc = new Account();
+
+            acc.setId(accountDAO.generateNextId());
+            acc.setEmail(email);
+            acc.setPassword(password);
+            acc.setRole(roleType);
+            acc.setStatus("active");
+
+            boolean inserted = accountDAO.insert(acc);
+
+            if (!inserted) {
+
+                req.setAttribute(
+                        "error",
+                        "Không thể tạo tài khoản!"
+                );
+
+                req.getRequestDispatcher("/jsp/auth/register.jsp")
+                        .forward(req, resp);
+
+                return;
+            }
+
+            // STUDENT
+
             if (roleType == 1) {
-                // Create student profile
-                Student student = new Student();
-                student.setId(studentDAO.generateNextId());
-                student.setName(name);
-                student.setPhone(phone);
-                student.setAccountId(account.getId());
-                studentDAO.insert(student);
-            } else if (roleType == 2) {
-                // Create tutor profile
-                String address = req.getParameter("address") != null ? req.getParameter("address") : "";
-                String specialization = req.getParameter("specialization") != null ? req.getParameter("specialization") : "";
-                String birthStr = req.getParameter("birth");
-                String idCardStr = req.getParameter("idCardNumber") != null ? req.getParameter("idCardNumber") : "0";
-                String bankAccStr = req.getParameter("bankAccountNumber") != null ? req.getParameter("bankAccountNumber") : "0";
-                String bankName = req.getParameter("bankName") != null ? req.getParameter("bankName") : "";
+
+                Student st = new Student();
+
+                st.setId(studentDAO.generateNextId());
+                st.setName(name);
+                st.setPhone(phone);
+
+                st.setAccountId(acc.getId());
+
+                studentDAO.insert(st);
+            }
+
+            // TUTOR
+
+            else {
 
                 Tutor tutor = new Tutor();
+
                 tutor.setId(tutorDAO.generateNextId());
+
                 tutor.setName(name);
                 tutor.setEmail(email);
+
                 tutor.setPhone(phone);
-                tutor.setAddress(address);
-                tutor.setSpecialization(specialization);
+
+                tutor.setAddress(
+                        req.getParameter("address")
+                );
+
+                tutor.setSpecialization(
+                        req.getParameter("specialization")
+                );
+
                 tutor.setDescription("");
+
                 tutor.setVerified(false);
+
                 tutor.setEvaluate(0);
-                tutor.setAccountId(account.getId());
+
+                tutor.setAccountId(acc.getId());
+
+                // DATE
 
                 try {
-                    tutor.setBirth(Date.valueOf(birthStr));
+
+                    tutor.setBirth(
+                            Date.valueOf(
+                                    req.getParameter("birth")
+                            )
+                    );
+
                 } catch (Exception e) {
-                    tutor.setBirth(Date.valueOf("2000-01-01"));
+
+                    tutor.setBirth(
+                            Date.valueOf("2000-01-01")
+                    );
                 }
+
+                // CCCD
+
                 try {
-                    tutor.setIdCardNumber(Long.parseLong(idCardStr));
+
+                    tutor.setIdCardNumber(
+                            Long.parseLong(
+                                    req.getParameter("idCardNumber")
+                            )
+                    );
+
                 } catch (Exception e) {
+
                     tutor.setIdCardNumber(0);
                 }
+
+                // BANK
+
                 try {
-                    tutor.setBankAccountNumber(Long.parseLong(bankAccStr));
+
+                    tutor.setBankAccountNumber(
+                            Long.parseLong(
+                                    req.getParameter("bankAccountNumber")
+                            )
+                    );
+
                 } catch (Exception e) {
+
                     tutor.setBankAccountNumber(0);
                 }
-                tutor.setBankName(bankName);
+
+                tutor.setBankName(
+                        req.getParameter("bankName")
+                );
 
                 tutorDAO.insert(tutor);
             }
 
-            req.setAttribute("success", "Đăng ký thành công! Vui lòng đăng nhập.");
-            req.getRequestDispatcher("/jsp/auth/login.jsp").forward(req, resp);
-        } else {
-            req.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại!");
-            req.getRequestDispatcher("/jsp/auth/register.jsp").forward(req, resp);
+            req.setAttribute(
+                    "success",
+                    "Đăng ký thành công!"
+            );
+
+            req.getRequestDispatcher("/jsp/auth/login.jsp")
+                    .forward(req, resp);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            req.setAttribute(
+                    "error",
+                    "Lỗi hệ thống: " + e.getMessage()
+            );
+
+            req.getRequestDispatcher("/jsp/auth/register.jsp")
+                    .forward(req, resp);
         }
     }
 }
