@@ -197,12 +197,22 @@ public class TutorDAO {
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
+
             if (rs.next()) {
-                String lastId = rs.getString("id");
-                int num = Integer.parseInt(lastId.replace("tut", "")) + 1;
+
+                String lastId = rs.getString("id").trim();
+
+                int num = Integer.parseInt(
+                        lastId.replace("tut", "").trim()
+                ) + 1;
+
                 return String.format("tut%03d", num);
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return "tut001";
     }
 

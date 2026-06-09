@@ -1,8 +1,9 @@
 package com.giasu.dao;
 
 import com.giasu.model.Booking;
-import com.giasu.model.Tutor;
 import com.giasu.model.Student;
+import com.giasu.model.Tutor;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,29 +11,49 @@ import java.util.List;
 public class BookingDAO {
 
     public boolean insert(Booking b) {
-        String sql = "INSERT INTO booking (id, course_id, tutor_id, student_id, booking_time, status, note) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        String sql =
+                "INSERT INTO booking " +
+                        "(id, course_id, tutor_id, student_id, booking_time, status, note) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, b.getId());
-            ps.setString(2, b.getCourseId());
-            ps.setString(3, b.getTutorId());
-            ps.setString(4, b.getStudentId());
+
+            ps.setString(1, b.getId().trim());
+            ps.setString(2, b.getCourseId().trim());
+            ps.setString(3, b.getTutorId().trim());
+            ps.setString(4, b.getStudentId().trim());
             ps.setTimestamp(5, b.getBookingTime());
-            ps.setString(6, b.getStatus());
-            ps.setString(7, b.getNote());
+            ps.setString(6, b.getStatus() == null ? "pending" : b.getStatus().trim());
+            ps.setString(7, b.getNote() == null ? "" : b.getNote());
+
             return ps.executeUpdate() > 0;
-        } catch (SQLException e) { e.printStackTrace(); }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 
     public boolean updateStatus(String id, String status) {
-        String sql = "UPDATE booking SET status = ? WHERE id = ?";
+
+        String sql =
+                "UPDATE booking SET status = ? WHERE id = ?";
+
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, status);
-            ps.setString(2, id);
+
+            ps.setString(1, status.trim());
+            ps.setString(2, id.trim());
+
             return ps.executeUpdate() > 0;
-        } catch (SQLException e) { e.printStackTrace(); }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 
@@ -45,76 +66,159 @@ public class BookingDAO {
     }
 
     public List<Booking> findAll() {
+
         List<Booking> list = new ArrayList<>();
-        String sql = "SELECT b.*, t.name as t_name, t.specialization as t_spec, s.name as st_name " +
-                "FROM booking b LEFT JOIN tutor t ON b.tutor_id = t.id LEFT JOIN student s ON b.student_id = s.id ORDER BY b.created_at DESC";
+
+        String sql =
+                "SELECT b.*, " +
+                        "t.name AS t_name, " +
+                        "t.specialization AS t_spec, " +
+                        "s.name AS st_name " +
+                        "FROM booking b " +
+                        "LEFT JOIN tutor t ON b.tutor_id = t.id " +
+                        "LEFT JOIN student s ON b.student_id = s.id " +
+                        "ORDER BY b.created_at DESC";
+
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) list.add(mapRowFull(rs));
-        } catch (SQLException e) { e.printStackTrace(); }
+
+            while (rs.next()) {
+                list.add(mapRowFull(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return list;
     }
 
     public Booking findById(String id) {
-        String sql = "SELECT b.*, t.name as t_name, t.specialization as t_spec, s.name as st_name " +
-                "FROM booking b LEFT JOIN tutor t ON b.tutor_id = t.id LEFT JOIN student s ON b.student_id = s.id WHERE b.id = ?";
+
+        String sql =
+                "SELECT b.*, " +
+                        "t.name AS t_name, " +
+                        "t.specialization AS t_spec, " +
+                        "s.name AS st_name " +
+                        "FROM booking b " +
+                        "LEFT JOIN tutor t ON b.tutor_id = t.id " +
+                        "LEFT JOIN student s ON b.student_id = s.id " +
+                        "WHERE b.id = ?";
+
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, id);
+
+            ps.setString(1, id.trim());
+
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) return mapRowFull(rs);
-        } catch (SQLException e) { e.printStackTrace(); }
+
+            if (rs.next()) {
+                return mapRowFull(rs);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 
     public String generateNextId() {
-        String sql = "SELECT id FROM booking ORDER BY id DESC LIMIT 1";
+
+        String sql =
+                "SELECT id FROM booking ORDER BY id DESC LIMIT 1";
+
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
+
             if (rs.next()) {
+
                 String lastId = rs.getString("id");
-                int num = Integer.parseInt(lastId.replace("bk", "")) + 1;
-                return String.format("bk%03d", num);
+
+                if (lastId != null) {
+
+                    lastId = lastId.trim();
+
+                    int num = Integer.parseInt(
+                            lastId.replace("bk", "").trim()
+                    ) + 1;
+
+                    return String.format("bk%03d", num);
+                }
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return "bk001";
     }
 
     private List<Booking> findByField(String field, String value) {
+
         List<Booking> list = new ArrayList<>();
-        String sql = "SELECT b.*, t.name as t_name, t.specialization as t_spec, s.name as st_name " +
-                "FROM booking b LEFT JOIN tutor t ON b.tutor_id = t.id LEFT JOIN student s ON b.student_id = s.id WHERE " + field + " = ? ORDER BY b.created_at DESC";
+
+        String sql =
+                "SELECT b.*, " +
+                        "t.name AS t_name, " +
+                        "t.specialization AS t_spec, " +
+                        "s.name AS st_name " +
+                        "FROM booking b " +
+                        "LEFT JOIN tutor t ON b.tutor_id = t.id " +
+                        "LEFT JOIN student s ON b.student_id = s.id " +
+                        "WHERE " + field + " = ? " +
+                        "ORDER BY b.created_at DESC";
+
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, value);
+
+            ps.setString(1, value.trim());
+
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) list.add(mapRowFull(rs));
-        } catch (SQLException e) { e.printStackTrace(); }
+
+            while (rs.next()) {
+                list.add(mapRowFull(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return list;
     }
 
     private Booking mapRowFull(ResultSet rs) throws SQLException {
+
         Booking b = new Booking();
-        b.setId(rs.getString("id"));
-        b.setCourseId(rs.getString("course_id"));
-        b.setTutorId(rs.getString("tutor_id"));
-        b.setStudentId(rs.getString("student_id"));
+
+        b.setId(rs.getString("id").trim());
+        b.setCourseId(rs.getString("course_id").trim());
+        b.setTutorId(rs.getString("tutor_id").trim());
+        b.setStudentId(rs.getString("student_id").trim());
+
         b.setBookingTime(rs.getTimestamp("booking_time"));
-        b.setStatus(rs.getString("status"));
+
+        String status = rs.getString("status");
+        b.setStatus(status == null ? "" : status.trim());
+
         b.setNote(rs.getString("note"));
         b.setCreatedAt(rs.getTimestamp("created_at"));
 
         Tutor t = new Tutor();
-        t.setId(rs.getString("tutor_id"));
+
+        t.setId(rs.getString("tutor_id").trim());
         t.setName(rs.getString("t_name"));
         t.setSpecialization(rs.getString("t_spec"));
+
         b.setTutor(t);
 
         Student s = new Student();
-        s.setId(rs.getString("student_id"));
+
+        s.setId(rs.getString("student_id").trim());
         s.setName(rs.getString("st_name"));
+
         b.setStudent(s);
 
         return b;
