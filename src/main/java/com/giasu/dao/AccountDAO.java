@@ -100,12 +100,18 @@ public class AccountDAO {
 
     public List<Account> findAll() {
         List<Account> list = new ArrayList<>();
-        String sql = "SELECT * FROM account ORDER BY created_at DESC";
+        String sql = "SELECT a.*, COALESCE(s.name, t.name, 'Admin') as name " +
+                     "FROM account a " +
+                     "LEFT JOIN student s ON a.id = s.account_id " +
+                     "LEFT JOIN tutor t ON a.id = t.account_id " +
+                     "ORDER BY a.created_at DESC";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                list.add(mapRow(rs));
+                Account acc = mapRow(rs);
+                acc.setName(rs.getString("name"));
+                list.add(acc);
             }
         } catch (SQLException e) {
             e.printStackTrace();

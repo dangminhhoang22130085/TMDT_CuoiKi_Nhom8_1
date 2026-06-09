@@ -19,6 +19,7 @@ public class CourseDAO {
                     "JOIN subject s ON c.subject_id = s.id " +
                     "JOIN tutor t ON c.tutor_id = t.id ";
 
+    // ================= FIND BY ID =================
     public Course findById(String id) {
         String sql = BASE_SELECT + "WHERE c.id = ?";
 
@@ -36,6 +37,7 @@ public class CourseDAO {
         return null;
     }
 
+    // ================= FIND BY TUTOR =================
     public List<Course> findByTutorId(String tutorId) {
         List<Course> list = new ArrayList<>();
         String sql = BASE_SELECT + "WHERE c.tutor_id = ?";
@@ -56,6 +58,7 @@ public class CourseDAO {
         return list;
     }
 
+    // ================= FIND ALL =================
     public List<Course> findAll() {
         List<Course> list = new ArrayList<>();
         String sql = BASE_SELECT;
@@ -74,6 +77,7 @@ public class CourseDAO {
         return list;
     }
 
+    // ================= MAPPING =================
     private Course mapRowFull(ResultSet rs) throws SQLException {
 
         Course c = new Course();
@@ -83,7 +87,6 @@ public class CourseDAO {
         c.setTime(rs.getTimestamp("time"));
         c.setStatus(rs.getString("c_status"));
 
-        // ===== SUBJECT =====
         Subject s = new Subject();
         s.setId(rs.getString("s_id"));
         s.setName(rs.getString("s_name"));
@@ -93,7 +96,6 @@ public class CourseDAO {
 
         c.setSubject(s);
 
-        // ===== TUTOR =====
         Tutor t = new Tutor();
         t.setId(rs.getString("t_id"));
         t.setName(rs.getString("t_name"));
@@ -103,5 +105,47 @@ public class CourseDAO {
         c.setTutor(t);
 
         return c;
+    }
+
+    // ================= REGISTER COURSE =================
+    public boolean registerCourse(String courseId, String studentId, int lessons, String status) {
+        String sql = "INSERT INTO registered_subjects " +
+                "(course_id, student_id, registration_date, number_of_lessons, status) " +
+                "VALUES (?, ?, CURRENT_DATE, ?, ?)";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, courseId);
+            ps.setString(2, studentId);
+            ps.setInt(3, lessons);
+            ps.setString(4, status);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // ================= CHECK REGISTERED =================
+    public boolean isStudentRegistered(String courseId, String studentId) {
+        String sql = "SELECT 1 FROM registered_subjects WHERE course_id = ? AND student_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, courseId);
+            ps.setString(2, studentId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

@@ -4,6 +4,7 @@
 
 -- Xóa các bảng cũ nếu đã tồn tại (Sử dụng CASCADE để tự động xử lý ràng buộc khóa ngoại)
 DROP TABLE IF EXISTS interest CASCADE;
+DROP TABLE IF EXISTS complaint CASCADE;
 DROP TABLE IF EXISTS review CASCADE;
 DROP TABLE IF EXISTS lesson CASCADE;
 DROP TABLE IF EXISTS registered_subjects CASCADE;
@@ -133,6 +134,22 @@ CREATE TABLE booking (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (course_id) REFERENCES course(id),
     FOREIGN KEY (tutor_id) REFERENCES tutor(id),
+    FOREIGN KEY (student_id) REFERENCES student(id)
+);
+
+-- ============================================
+-- Bảng complaint - Khiếu nại
+-- ============================================
+CREATE TABLE complaint (
+    id CHAR(20) PRIMARY KEY,
+    booking_id CHAR(20),
+    student_id CHAR(20) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'resolved', 'rejected')),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    resolved_at TIMESTAMP,
+    FOREIGN KEY (booking_id) REFERENCES booking(id),
     FOREIGN KEY (student_id) REFERENCES student(id)
 );
 
@@ -318,3 +335,10 @@ UPDATE tutor SET avatar = 'giasuTiengAnh-TranThiMai.png' WHERE id = 'tut002';
 UPDATE tutor SET avatar = 'giasuHoaHoc-LeHoangMinh.png' WHERE id = 'tut003';
 UPDATE tutor SET avatar = 'giasuVatLi-PhamMinhHuong.png' WHERE id = 'tut004';
 UPDATE tutor SET avatar = 'giasuNguVan-NguyenThuHa.png' WHERE id = 'tut005';
+
+-- ============================================
+-- Dữ liệu khiếu nại mẫu
+-- ============================================
+INSERT INTO complaint (id, booking_id, student_id, title, description, status) VALUES
+('comp001', 'bk001', 'st001', 'Gia sư đi trễ', 'Gia sư thường xuyên đi trễ 15-20 phút và không dạy bù.', 'pending'),
+('comp002', 'bk002', 'st002', 'Lớp học không đúng chất lượng', 'Gia sư không chuẩn bị bài giảng chu đáo như cam kết.', 'resolved');
