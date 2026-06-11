@@ -223,4 +223,23 @@ public class BookingDAO {
 
         return b;
     }
+
+    public int countStudentsByTutorId(String tutorId) {
+            int count = 0;
+            String query = "SELECT COUNT(DISTINCT student_id) FROM bookings WHERE tutor_id = ? AND status = 'ACCEPTED'";
+
+            try (java.sql.Connection conn = new DBConnection().getConnection();
+                 java.sql.PreparedStatement ps = conn.prepareStatement(query)) {
+
+                ps.setString(1, tutorId);
+                try (java.sql.ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        count = rs.getInt(1);
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Lỗi đếm học sinh: " + e.getMessage());
+            }
+            return count;
+    }
 }

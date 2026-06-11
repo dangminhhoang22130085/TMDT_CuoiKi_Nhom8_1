@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="GiaSuOnline:war exploded" />
+    </artifacts-to-build>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="aea65715-3052-4c6b-b7c0-b7d7844f8a90" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/giasu/controller/TutorDetailServlet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/giasu/controller/TutorDetailServlet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/giasu/dao/BookingDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/giasu/dao/BookingDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/webapp/jsp/tutor/tutor-detail.jsp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/jsp/tutor/tutor-detail.jsp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/controller/AdminServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/controller/AdminServlet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/controller/BookingServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/controller/BookingServlet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/controller/ComplaintServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/controller/ComplaintServlet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/controller/DashboardServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/controller/DashboardServlet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/controller/LoginServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/controller/LoginServlet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/controller/LogoutServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/controller/LogoutServlet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/controller/PaymentServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/controller/PaymentServlet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/controller/ProfileServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/controller/ProfileServlet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/controller/RegisterServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/controller/RegisterServlet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/controller/ReviewServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/controller/ReviewServlet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/controller/TutorDetailServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/controller/TutorDetailServlet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/controller/TutorListServlet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/controller/TutorListServlet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/dao/AccountDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/dao/AccountDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/dao/BookingDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/dao/BookingDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/dao/ComplaintDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/dao/ComplaintDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/dao/CourseDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/dao/CourseDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/dao/DBConnection.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/dao/DBConnection.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/dao/PaymentDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/dao/PaymentDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/dao/ReviewDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/dao/ReviewDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/dao/StudentDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/dao/StudentDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/dao/SubjectDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/dao/SubjectDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/dao/TutorDAO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/dao/TutorDAO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/filter/AuthFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/filter/AuthFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/filter/EncodingFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/filter/EncodingFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/model/Account.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/model/Account.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/model/Booking.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/model/Booking.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/model/Complaint.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/model/Complaint.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/model/Course.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/model/Course.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/model/Notification.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/model/Notification.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/model/Payment.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/model/Payment.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/model/Review.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/model/Review.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/model/Student.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/model/Student.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/model/Subject.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/model/Subject.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/giasu/model/Tutor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/giasu/model/Tutor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/db.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/db.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="LogFilters">
+    <option name="FILTER_ERRORS" value="false" />
+    <option name="FILTER_WARNINGS" value="false" />
+    <option name="FILTER_INFO" value="true" />
+    <option name="FILTER_DEBUG" value="true" />
+    <option name="CUSTOM_FILTER" />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="6.170659803398702E-8" />
+      <entry key="MS500" value="0.03614650574704023" />
+      <entry key="S2" value="0.43603021014045135" />
+      <entry key="S5" value="0.7174747677251954" />
+      <entry key="S10" value="0.8470634282944108" />
+      <entry key="S30" value="1.018914490561047" />
+      <entry key="S60" value="1.6502933759014151" />
+      <entry key="M2" value="3.1383216746969773" />
+      <entry key="M5" value="5.349948106694143" />
+      <entry key="M10" value="6.516471756530694" />
+      <entry key="M15" value="6.971866818384882" />
+      <entry key="M30" value="7.465300477252421" />
+      <entry key="H1" value="7.727279756208645" />
+      <entry key="H2" value="7.862269760871912" />
+      <entry key="H4" value="7.93078885181369" />
+      <entry key="D1" value="7.988416449155065" />
+      <entry key="W1" value="7.998344018777065" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0000000000004317" />
+      <entry key="S10" value="1.0000010414052019" />
+      <entry key="S30" value="1.0206644637969704" />
+      <entry key="S60" value="1.2483799954904669" />
+      <entry key="M2" value="1.862698748641607" />
+      <entry key="M5" value="2.822026459646656" />
+      <entry key="M10" value="3.337909682738536" />
+      <entry key="M15" value="3.540523990209387" />
+      <entry key="M30" value="3.760712254291658" />
+      <entry key="H1" value="3.877868300033531" />
+      <entry key="H2" value="3.938299182131154" />
+      <entry key="H4" value="3.9689891929125323" />
+      <entry key="D1" value="3.9948091126523515" />
+      <entry key="W1" value="3.999257893754706" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="7.357525213800403E-8" />
+      <entry key="MS500" value="0.0537649613884159" />
+      <entry key="S2" value="0.7976360578954181" />
+      <entry key="S5" value="1.3829127884547656" />
+      <entry key="S10" value="1.662753916880381" />
+      <entry key="S30" value="1.9728694465019898" />
+      <entry key="S60" value="2.8590794438472145" />
+      <entry key="M2" value="4.9734179316645095" />
+      <entry key="M5" value="8.156102388968419" />
+      <entry key="M10" value="9.845147929189258" />
+      <entry key="M15" value="10.505895448217832" />
+      <entry key="M30" value="11.22258047184106" />
+      <entry key="H1" value="11.603382819688303" />
+      <entry key="H2" value="11.79967365939972" />
+      <entry key="H4" value="11.899327186814293" />
+      <entry key="D1" value="11.983149967858273" />
+      <entry key="W1" value="11.997591102295944" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3EkGqdOTtdv9JWXnPSOwa4C5SYj" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JavaScript Debug.tutor-detail.jsp.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.GiaSuOnline [clean].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;Tomcat Server.Tomcat 9.0.118.executor&quot;: &quot;Run&quot;,
+    &quot;Tomcat Server.Unnamed.executor&quot;: &quot;Run&quot;,
+    &quot;Tomcat Server.tutor-detail.jsp.executor&quot;: &quot;Run&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dat&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/TMDT_CuoiKi_Nhom8_1/src/sql&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\TMDT_CuoiKi_Nhom8_1\src\sql" />
+      <recent name="D:\TMDT_CuoiKi_Nhom8_1\src\main\webapp\images\tutors" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="configurationStatuses">
+      <map>
+        <entry key="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory">
+          <value>
+            <map>
+              <entry key="Tomcat 9.0.118" value="STOPPED" />
+            </map>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="Tomcat 9.0.118" type="#com.intellij.j2ee.web.tomcat.TomcatRunConfigurationFactory" factoryName="Local" APPLICATION_SERVER_NAME="Tomcat 9.0.118" ALTERNATIVE_JRE_ENABLED="true" ALTERNATIVE_JRE_PATH="26" nameIsGenerated="true">
+      <option name="UPDATING_POLICY" value="update-resources" />
+      <deployment>
+        <artifact name="GiaSuOnline:war exploded">
+          <settings>
+            <option name="CONTEXT_PATH" value="/GiaSuOnline_war_exploded" />
+          </settings>
+        </artifact>
+      </deployment>
+      <server-settings>
+        <option name="BASE_DIRECTORY_NAME" value="dcfcfad3-3766-40bb-852d-412b55f749c5" />
+      </server-settings>
+      <predefined_log_file enabled="true" id="Tomcat" />
+      <predefined_log_file enabled="true" id="Tomcat Catalina" />
+      <predefined_log_file id="Tomcat Manager" />
+      <predefined_log_file id="Tomcat Host Manager" />
+      <predefined_log_file id="Tomcat Localhost Access" />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="54465" />
+      </RunnerSettings>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Debug">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Profile">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Run">
+        <option name="USE_ENV_VARIABLES" value="true" />
+        <STARTUP>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </STARTUP>
+        <SHUTDOWN>
+          <option name="USE_DEFAULT" value="true" />
+          <option name="SCRIPT" value="" />
+          <option name="VM_PARAMETERS" value="" />
+          <option name="PROGRAM_PARAMETERS" value="" />
+        </SHUTDOWN>
+      </ConfigurationWrapper>
+      <method v="2">
+        <option name="Make" enabled="true" />
+        <option name="BuildArtifacts" enabled="true">
+          <artifact name="GiaSuOnline:war exploded" />
+        </option>
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-37e91769500f-intellij.indexing.shared.core-IU-261.24374.151" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-IU-261.24374.151" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="aea65715-3052-4c6b-b7c0-b7d7844f8a90" name="Changes" comment="" />
+      <created>1780715346322</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1780715346322</updated>
+      <workItem from="1780715347900" duration="3372000" />
+      <workItem from="1780720768841" duration="3759000" />
+      <workItem from="1780744838418" duration="14042000" />
+      <workItem from="1780766598318" duration="88000" />
+      <workItem from="1780837676870" duration="58000" />
+      <workItem from="1780837792307" duration="316000" />
+      <workItem from="1780891419354" duration="6312000" />
+      <workItem from="1780979280446" duration="2760000" />
+      <workItem from="1781146171112" duration="34000" />
+      <workItem from="1781146243917" duration="29000" />
+      <workItem from="1781147037111" duration="1870000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
