@@ -1,6 +1,7 @@
 package com.giasu.model;
 
 import java.sql.Date;
+import java.util.List;
 
 public class Tutor {
     private String id;
@@ -23,6 +24,9 @@ public class Tutor {
     private int totalStudents;
     private int totalCourses;
     private int totalReviews;
+
+    private List<Course> courses;
+
 
     public Tutor() {}
 
@@ -79,4 +83,9 @@ public class Tutor {
 
     public int getTotalReviews() { return totalReviews; }
     public void setTotalReviews(int totalReviews) { this.totalReviews = totalReviews; }
+
+    public List<Course> getCourses() { return courses; }
+    public void setCourses(List<Course> courses) { this.courses = courses; }
+
+
 }
