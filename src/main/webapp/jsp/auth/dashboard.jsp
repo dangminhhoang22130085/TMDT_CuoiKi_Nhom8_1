@@ -148,6 +148,41 @@
                         </div>
                     </div>
 
+
+                    <div class="section-card" style="margin-bottom: 2rem;">
+                        <h2><i class="fas fa-plus-circle"></i> Tạo Khóa Học Mới</h2>
+                        <form action="<c:url value='/dashboard'/>" method="post" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                            <input type="hidden" name="action" value="createCourse">
+
+                            <div class="form-group">
+                                <label>Tên Môn Học</label>
+                                <input type="text" name="name" class="form-control" placeholder="VD: Toán Nâng Cao" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Lớp / Trình Độ</label>
+                                <input type="text" name="level" class="form-control" placeholder="VD: Lớp 10, IELTS 6.5" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Học Phí (VNĐ / Giờ)</label>
+                                <input type="number" name="fee" class="form-control" placeholder="VD: 200000" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Mô tả chi tiết</label>
+                                <input type="text" name="description" class="form-control" placeholder="Tóm tắt nội dung học..." required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                            </div>
+
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <button type="submit" class="btn btn-primary" style="padding: 10px 20px;"><i class="fas fa-save"></i> Đăng Khóa Học</button>
+                            </div>
+                        </form>
+                    </div>
+
+
+
+
                     <div class="section-card">
                         <h2>Lịch Dạy</h2>
                         <table class="data-table">
@@ -184,10 +219,10 @@
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${b.status eq 'pending'}">
-                                                            <a href="<c:url value='/booking?action=confirm&amp;id=${b.id}'/>" class="btn btn-sm btn-success" style="margin-right: 5px;">
+                                                            <a href="${pageContext.request.contextPath}/dashboard?action=confirm&id=${b.id}" class="btn btn-sm btn-success" style="margin-right: 5px;">
                                                                 <i class="fas fa-check"></i> Chấp Nhận
                                                             </a>
-                                                            <a href="<c:url value='/booking?action=cancel&amp;id=${b.id}'/>" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn từ chối lịch học này?');">
+                                                            <a href="${pageContext.request.contextPath}/dashboard?action=cancel&id=${b.id}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn từ chối lịch học này?');">
                                                                 <i class="fas fa-times"></i> Từ Chối
                                                             </a>
                                                         </c:when>

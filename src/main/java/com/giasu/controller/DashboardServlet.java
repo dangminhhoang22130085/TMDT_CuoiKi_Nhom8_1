@@ -24,9 +24,21 @@ public class DashboardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         Account account = (Account) session.getAttribute("account");
+        String action = req.getParameter("action");
+        String bookingId = req.getParameter("id");
 
         if (account == null) {
             resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+        if (action != null && bookingId != null && account.getRole() == 2) {
+            if (action.equals("confirm")) {
+                bookingDAO.updateStatus(bookingId, "confirmed");
+            } else if (action.equals("cancel")) {
+                bookingDAO.updateStatus(bookingId, "rejected");
+            }
+            // Xử lý xong, reload lại trang dashboard để cập nhật trạng thái mới
+            resp.sendRedirect(req.getContextPath() + "/dashboard");
             return;
         }
 
@@ -108,6 +120,9 @@ public class DashboardServlet extends HttpServlet {
                 }
             }
 
+
+
+
             req.setAttribute("bookings", bookings);
             req.setAttribute("studentBookings", bookings);
             req.setAttribute("payments", payments);
@@ -121,4 +136,49 @@ public class DashboardServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/admin/dashboard");
         }
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        HttpSession session = req.getSession();
+        Account account = (Account) session.getAttribute("account");
+
+        String action = req.getParameter("action");
+
+        // Chỉ cho phép Gia sư (role == 2) tạo khóa học
+        if (account != null && account.getRole() == 2 && "createCourse".equals(action)) {
+            Tutor tutor = (Tutor) session.getAttribute("userProfile");
+
+            String name = req.getParameter("name");
+            String level = req.getParameter("level");
+            long fee = Long.parseLong(req.getParameter("fee"));
+            String description = req.getParameter("description");
+
+            SubjectDAO subjectDAO = new SubjectDAO();
+
+            // 1. Tạo và Insert Subject trước
+            Subject subject = new Subject();
+            subject.setId(subjectDAO.generateNextId());
+            subject.setName(name);
+            subject.setLevel(level);
+            subject.setFee(fee);
+            subject.setDescription(description);
+            subject.setStatus("active");
+
+            if (subjectDAO.insert(subject)) {
+                // 2. Insert Course gắn với Subject vừa tạo
+                Course course = new Course();
+                course.setId(courseDAO.generateNextId());
+                course.setSubjectId(subject.getId());
+                course.setTutorId(tutor.getId());
+                course.setStatus("active");
+
+                courseDAO.insert(course);
+            }
+        }
+
+        // Reload lại trang dashboard để thấy dữ liệu mới
+        resp.sendRedirect(req.getContextPath() + "/dashboard");
+    }
+
 }

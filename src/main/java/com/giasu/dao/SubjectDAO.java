@@ -62,4 +62,38 @@ public class SubjectDAO {
         s.setStatus(rs.getString("status"));
         return s;
     }
+
+
+
+    // Tạo ID tự động (sj001, sj002...)
+    public String generateNextId() {
+        String sql = "SELECT id FROM subject ORDER BY id DESC LIMIT 1";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                String lastId = rs.getString("id").trim();
+                int num = Integer.parseInt(lastId.replace("sj", "")) + 1;
+                return String.format("sj%03d", num);
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return "sj001";
+    }
+
+    // Insert Môn học mới
+    public boolean insert(Subject s) {
+        String sql = "INSERT INTO subject (id, name, level, description, fee, status) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, s.getId());
+            ps.setString(2, s.getName());
+            ps.setString(3, s.getLevel());
+            ps.setString(4, s.getDescription());
+            ps.setLong(5, s.getFee());
+            ps.setString(6, s.getStatus());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) { e.printStackTrace(); }
+        return false;
+    }
+
 }
