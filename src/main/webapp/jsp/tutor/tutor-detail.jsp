@@ -48,8 +48,8 @@
                 <div class="detail-rating">
                     <div class="stars">
                         <c:choose>
-                            <c:when test="${requestScope.tutor.evaluate > 0}">
-                                <c:forEach begin="1" end="${requestScope.tutor.evaluate}">
+                            <c:when test="${requestScope.avgRating > 0}">
+                                <c:forEach begin="1" end="${requestScope.avgRating}">
                                     <i class="fas fa-star"></i>
                                 </c:forEach>
                             </c:when>
@@ -60,20 +60,20 @@
                             </c:otherwise>
                         </c:choose>
                     </div>
-                    <span><strong>${requestScope.tutor.evaluate} / 5</strong> (${requestScope.tutor.totalReviews} đánh giá)</span>
+                    <span><strong>${requestScope.avgRating} / 5</strong> (${requestScope.totalReviews} đánh giá)</span>
                 </div>
 
                 <div class="detail-stats">
                     <div class="stat">
-                        <h4>${requestScope.tutor.totalStudents}</h4>
+                        <h4>${requestScope.totalStudents}</h4>
                         <p>Học Sinh Đã Học</p>
                     </div>
                     <div class="stat">
-                        <h4>${requestScope.tutor.totalCourses}</h4>
+                        <h4>${requestScope.totalCourses}</h4>
                         <p>Lớp Học Mở</p>
                     </div>
                     <div class="stat">
-                        <h4>${requestScope.tutor.totalReviews}</h4>
+                        <h4>${requestScope.totalReviews}</h4>
                         <p>Lượt Phản Hồi</p>
                     </div>
                 </div>

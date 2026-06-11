@@ -22,6 +22,9 @@ public class BookingServlet extends HttpServlet {
         Account account = (Account) session.getAttribute("account");
 
         String action = req.getParameter("action");
+        String courseId = req.getParameter("courseId");
+        String tutorId = req.getParameter("tutorId");
+        String id = req.getParameter("id");
 
         if ("confirm".equals(action) || "cancel".equals(action)) {
             String bookingId = req.getParameter("id");
@@ -57,10 +60,6 @@ public class BookingServlet extends HttpServlet {
             return;
         }
 
-        // Show booking form
-        String courseId = req.getParameter("courseId");
-        String tutorId = req.getParameter("tutorId");
-
         if (tutorId != null) {
             Tutor tutor = tutorDAO.findById(tutorId);
             List<Course> courses = courseDAO.findByTutorId(tutorId);
@@ -72,8 +71,26 @@ public class BookingServlet extends HttpServlet {
             req.setAttribute("selectedCourse", course);
         }
 
-        req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
+        if (action != null && id != null) {
+            // Gia sư chấp nhận học viên -> status: confirmed
+            if (action.equals("confirm")) {
+                bookingDAO.updateStatus(id, "confirmed");
+            }
+            // Gia sư từ chối HOẶC Học viên hủy -> status: cancelled/rejected
+            else if (action.equals("cancel")) {
+                bookingDAO.updateStatus(id, "rejected");
+            }
+
+            // Xử lý xong quay lại trang Dashboard
+            resp.sendRedirect(req.getContextPath() + "/dashboard");
+            return;
+        }
+
+
+
     }
+
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -121,5 +138,7 @@ public class BookingServlet extends HttpServlet {
         }
 
         req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
+        resp.sendRedirect(req.getContextPath() + "/home");
     }
 }
