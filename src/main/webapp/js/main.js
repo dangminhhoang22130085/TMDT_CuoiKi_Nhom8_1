@@ -192,18 +192,33 @@ function showNotification(message, type = 'success') {
         notification.style.animation = 'slideOutRight 0.3s ease';
         setTimeout(() => notification.remove(), 300);
     }, 3000);
+
+
 }
 
 // Add CSS animations
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideInRight {
-        from { opacity: 0; transform: translateX(100px); }
-        to { opacity: 1; transform: translateX(0); }
+        from {
+            opacity: 0;
+            transform: translateX(100px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
+    
     @keyframes slideOutRight {
-        from { opacity: 1; transform: translateX(0); }
-        to { opacity: 0; transform: translateX(100px); }
+        from {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateX(100px);
+        }
     }
 `;
 document.head.appendChild(style);
@@ -253,6 +268,46 @@ function toggleSingleCourse(tutorId) {
 // Export global để JSP gọi được
 window.toggleAllCourses = toggleAllCourses;
 window.toggleSingleCourse = toggleSingleCourse;
+/* ==========================================================================
+   BỔ SUNG: XỬ LÝ SỰ KIỆN THÔNG BÁO LOGIN, ERROR VÀ XÁC NHẬN LOGOUT
+   ========================================================================== */
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Tự động bắt thông báo từ Servlet thông qua URL Parameters (nếu có)
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // Nếu Đăng nhập thành công
+    if (urlParams.get('loginSuccess') === 'true') {
+        showNotification('Đăng nhập thành công! Chào mừng bạn quay trở lại.', 'success');
+        // Xóa param trên URL cho sạch thanh địa chỉ
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // Nếu Đăng xuất thành công
+    if (urlParams.get('logoutSuccess') === 'true') {
+        showNotification('Bạn đã đăng xuất tài khoản an toàn.', 'success');
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // 2. Bắt sự kiện Click nút Đăng xuất trên Thanh Menu toàn hệ thống
+    // Tìm tất cả thẻ <a> có link chứa cụm từ '/logout'
+    const logoutButtons = document.querySelectorAll('a[href*="/logout"], a[href*="logout"]');
+
+    logoutButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            // Chặn chuyển hướng lập tức để hiển thị hộp thoại hỏi (Confirm)
+            e.preventDefault();
+            const logoutUrl = this.getAttribute('href');
+
+            // Hiển thị hộp thoại xác nhận chuyên nghiệp
+            const confirmLogout = confirm("Bạn có chắc chắn muốn đăng xuất khỏi hệ thống TutorHub không?");
+            if (confirmLogout) {
+                // Nếu đồng ý, chuyển hướng sang LogoutServlet để xóa Session
+                window.location.href = logoutUrl;
+            }
+        });
+    });
+});
 
 /* ==========================================================================
    LOGIC SLIDER GIA SƯ NỔI BẬT CHẠY TUẦN HOÀN NỐI ĐUÔI VÔ HẠN (2 GIÂY)
