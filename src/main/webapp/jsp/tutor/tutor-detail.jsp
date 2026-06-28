@@ -113,11 +113,18 @@
                                 <div class="course-footer">
                                     <span class="course-price">${course.subject.fee}đ/giờ</span>
 
-                                    <c:if test="${not empty sessionScope.account and sessionScope.account.role eq 1}">
-                                        <a href="${pageContext.request.contextPath}/booking?courseId=${course.id}&amp;tutorId=${requestScope.tutor.id}" class="btn btn-sm btn-primary">
-                                            Chọn Lớp
-                                        </a>
-                                    </c:if>
+                                    <c:choose>
+                                        <c:when test="${not empty sessionScope.account and sessionScope.account.role eq 1}">
+                                            <a href="${pageContext.request.contextPath}/booking?courseId=${course.id}&amp;tutorId=${requestScope.tutor.id}" class="btn btn-sm btn-primary">
+                                                Chọn Lớp
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a href="${pageContext.request.contextPath}/jsp/auth/login.jsp?redirect=${pageContext.request.contextPath}/booking?courseId=${course.id}%26tutorId=${requestScope.tutor.id}" class="btn btn-sm btn-primary">
+                                                Chọn Lớp
+                                            </a>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                             </div>
                         </c:forEach>
