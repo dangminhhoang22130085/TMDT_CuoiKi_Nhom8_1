@@ -97,9 +97,10 @@
                                                             <a href="${pageContext.request.contextPath}/payment?courseId=${b.courseId}&tutorId=${b.tutorId}" class="btn btn-sm btn-success" style="margin-right: 5px;">
                                                                 <i class="fas fa-credit-card"></i> Thanh Toán
                                                             </a>
-                                                            <a href="<c:url value='/complaint?bookingId=${b.id}'/>" class="btn btn-sm btn-warning">
-                                                                <i class="fas fa-exclamation-triangle"></i> Khiếu Nại
-                                                            </a>
+                                                            <button type="button" class="btn btn-sm btn-warning"
+                                                                    onclick="openFeedbackModal('${b.id}', '${b.studentId}', '${b.tutorId}', '${b.courseId}', `${b.tutor.name}`)">
+                                                                <i class="fas fa-exclamation-triangle"></i> Khiếu Nại / Đánh Giá
+                                                            </button>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <span style="color: var(--gray-400);">Không có hành động</span>
@@ -355,8 +356,30 @@
             </section>
         </main>
     </div>
+            <jsp:include page="/layout/feedback-modal.jsp"/>
+            <jsp:include page="/layout/footer.jsp"/>
 
-    <jsp:include page="/layout/footer.jsp"/>
-    <script src="<c:url value='/js/main.js'/>"></script>
+            <script src="<c:url value='/js/main.js'/>"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const status = urlParams.get('status');
+                    const msgType = urlParams.get('msgType');
+
+                    if (status === 'success') {
+                        if (msgType === 'review') {
+                            showNotification('Đăng đánh giá công khai thành công!', 'success');
+                        } else if (msgType === 'complaint') {
+                            showNotification('Gửi khiếu nại tới Ban quản trị thành công!', 'success');
+                        }
+                        // Xóa param trên url để nhìn chuyên nghiệp hơn
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    } else if (status === 'fail') {
+                        showNotification('Có lỗi hệ thống xảy ra, vui lòng thực hiện lại!', 'error');
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    }
+                });
+            </script>
 </body>
 </html>
+
