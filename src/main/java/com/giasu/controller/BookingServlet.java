@@ -26,6 +26,9 @@ public class BookingServlet extends HttpServlet {
         String tutorId = req.getParameter("tutorId");
         String id = req.getParameter("id");
 
+        if (courseId != null) courseId = courseId.trim();
+        if (tutorId != null) tutorId = tutorId.trim();
+
         if ("confirm".equals(action) || "cancel".equals(action)) {
             String bookingId = req.getParameter("id");
             Booking booking = bookingDAO.findById(bookingId);
@@ -71,23 +74,9 @@ public class BookingServlet extends HttpServlet {
             req.setAttribute("selectedCourse", course);
         }
 
-        if (action != null && id != null) {
-            // Gia sư chấp nhận học viên -> status: confirmed
-            if (action.equals("confirm")) {
-                bookingDAO.updateStatus(id, "confirmed");
-            }
-            // Gia sư từ chối HOẶC Học viên hủy -> status: cancelled/rejected
-            else if (action.equals("cancel")) {
-                bookingDAO.updateStatus(id, "rejected");
-            }
 
-            // Xử lý xong quay lại trang Dashboard
-            resp.sendRedirect(req.getContextPath() + "/dashboard");
-            return;
-        }
-
-
-
+// Thêm dòng này để kết thúc luồng hiển thị form đặt lịch
+        req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
     }
 
 
@@ -99,7 +88,7 @@ public class BookingServlet extends HttpServlet {
         Student student = (Student) session.getAttribute("userProfile");
 
         if (student == null) {
-            resp.sendRedirect(req.getContextPath() + "/login");
+            resp.sendRedirect(req.getContextPath() + "/jsp/auth/login.jsp");
             return;
         }
 
@@ -135,6 +124,14 @@ public class BookingServlet extends HttpServlet {
             req.setAttribute("success", "Đặt lịch thành công! Vui lòng chờ gia sư xác nhận.");
         } else {
             req.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại!");
+            // ĐÃ THÊM: Nạp lại thông tin gia sư tránh vỡ giao diện khi submit lỗi
+            if (tutorId != null) {
+                req.setAttribute("tutor", tutorDAO.findById(tutorId.trim()));
+                req.setAttribute("courses", courseDAO.findByTutorId(tutorId.trim()));
+            }
+            if (courseId != null) {
+                req.setAttribute("selectedCourse", courseDAO.findById(courseId.trim()));
+            }
         }
 
         req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
