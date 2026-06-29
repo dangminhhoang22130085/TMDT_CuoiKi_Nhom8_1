@@ -233,6 +233,32 @@ public class TutorDAO {
         t.setAccountId(rs.getString("account_id"));
         t.setEvaluate(rs.getInt("evaluate"));
         t.setVerified(rs.getBoolean("verified"));
+        try { t.setBalance(rs.getLong("balance")); } catch (Exception e) {}
         return t;
+    }
+
+    public long getBalance(String tutorId) {
+        String sql = "SELECT balance FROM tutor WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, tutorId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong("balance");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public boolean updateBalance(String tutorId, long amount, Connection conn) throws SQLException {
+        String sql = "UPDATE tutor SET balance = balance + ? WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, amount);
+            ps.setString(2, tutorId);
+            return ps.executeUpdate() > 0;
+        }
     }
 }

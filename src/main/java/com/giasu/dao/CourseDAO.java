@@ -148,4 +148,48 @@ public class CourseDAO {
         }
         return false;
     }
+
+    // ================= UPDATE STATUS =================
+    public boolean updateStatus(String courseId, String status, Connection conn) throws SQLException {
+        String sql = "UPDATE course SET status = ? WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setString(2, courseId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    // ================= INSERT =================
+    public boolean insert(Course c) {
+        String sql = "INSERT INTO course (id, subject_id, tutor_id, time, status) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, c.getId().trim());
+            ps.setString(2, c.getSubjectId().trim());
+            ps.setString(3, c.getTutorId().trim());
+            ps.setTimestamp(4, c.getTime() != null ? c.getTime() : new Timestamp(System.currentTimeMillis()));
+            ps.setString(5, c.getStatus() != null ? c.getStatus() : "active");
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // ================= GENERATE NEXT ID =================
+    public String generateNextId() {
+        String sql = "SELECT id FROM course ORDER BY id DESC LIMIT 1";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                String lastId = rs.getString("id").trim();
+                int num = Integer.parseInt(lastId.replace("course", "").trim()) + 1;
+                return String.format("course%03d", num);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "course001";
+    }
 }
