@@ -17,16 +17,46 @@ public class DashboardServlet extends HttpServlet {
     private CourseDAO courseDAO = new CourseDAO();
     private PaymentDAO paymentDAO = new PaymentDAO();
     private ReviewDAO reviewDAO = new ReviewDAO();
-
+    private StudentDAO studentDAO = new StudentDAO();
     private TutorDAO tutorDAO = new TutorDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         Account account = (Account) session.getAttribute("account");
+        String action = req.getParameter("action");
+        String bookingId = req.getParameter("id");
 
         if (account == null) {
             resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
+        // Pull session flash messages
+        String success = (String) session.getAttribute("success");
+        if (success != null) {
+            req.setAttribute("success", success);
+            session.removeAttribute("success");
+        }
+        String error = (String) session.getAttribute("error");
+        if (error != null) {
+            req.setAttribute("error", error);
+            session.removeAttribute("error");
+        }
+        if (action != null && bookingId != null && account.getRole() == 2) {
+            if (action.equals("confirm")) {
+                bookingDAO.updateStatus(bookingId, "confirmed");
+                Booking booking = bookingDAO.findById(bookingId);
+                if (booking != null && booking.getCourseId() != null) {
+                    if (!courseDAO.isStudentRegistered(booking.getCourseId(), booking.getStudentId())) {
+                        courseDAO.registerCourse(booking.getCourseId(), booking.getStudentId(), 10, "pending_payment");
+                    }
+                }
+            } else if (action.equals("cancel")) {
+                bookingDAO.updateStatus(bookingId, "rejected");
+            }
+            // Xử lý xong, reload lại trang dashboard để cập nhật trạng thái mới
+            resp.sendRedirect(req.getContextPath() + "/dashboard");
             return;
         }
 
@@ -68,6 +98,11 @@ public class DashboardServlet extends HttpServlet {
                 studentCount = tutor.getTotalStudents();
             }
 
+            // Tutor real balance
+            Tutor freshTutor = tutorDAO.findById(tutor.getId());
+            long tutorBalance = (freshTutor != null) ? freshTutor.getBalance() : 0;
+            req.setAttribute("tutorBalance", String.format("%,d VND", tutorBalance));
+
             req.setAttribute("bookings", bookings);
             req.setAttribute("tutorBookings", bookings);
             req.setAttribute("courses", courses);
@@ -76,7 +111,7 @@ public class DashboardServlet extends HttpServlet {
 
             req.setAttribute("totalStudents", studentCount);
             req.setAttribute("totalCourses", courses.size());
-            req.setAttribute("monthlyIncome", String.format("%,d VNĐ", monthlyIncome));
+            req.setAttribute("monthlyIncome", String.format("%,d VND", monthlyIncome));
             req.setAttribute("averageRating", String.format("%.1f", avgRating));
 
             req.getRequestDispatcher("/jsp/auth/dashboard.jsp").forward(req, resp);
@@ -108,17 +143,70 @@ public class DashboardServlet extends HttpServlet {
                 }
             }
 
+
+
+
             req.setAttribute("bookings", bookings);
             req.setAttribute("studentBookings", bookings);
             req.setAttribute("payments", payments);
 
             req.setAttribute("upcomingCount", upcomingCount);
             req.setAttribute("favoriteTutors", favoriteCount);
-            req.setAttribute("balance", "5,000,000 VNĐ"); // Mock balance for demonstration
+
+            // Real balance from DB
+            Student freshStudent = studentDAO.findById(student.getId());
+            long studentBalance = (freshStudent != null) ? freshStudent.getBalance() : 0;
+            if (freshStudent != null) session.setAttribute("userProfile", freshStudent);
+            req.setAttribute("balance", String.format("%,d VND", studentBalance));
 
             req.getRequestDispatcher("/jsp/auth/dashboard.jsp").forward(req, resp);
         } else {
             resp.sendRedirect(req.getContextPath() + "/admin/dashboard");
         }
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        HttpSession session = req.getSession();
+        Account account = (Account) session.getAttribute("account");
+
+        String action = req.getParameter("action");
+
+        // Chỉ cho phép Gia sư (role == 2) tạo khóa học
+        if (account != null && account.getRole() == 2 && "createCourse".equals(action)) {
+            Tutor tutor = (Tutor) session.getAttribute("userProfile");
+
+            String name = req.getParameter("name");
+            String level = req.getParameter("level");
+            long fee = Long.parseLong(req.getParameter("fee"));
+            String description = req.getParameter("description");
+
+            SubjectDAO subjectDAO = new SubjectDAO();
+
+            // 1. Tạo và Insert Subject trước
+            Subject subject = new Subject();
+            subject.setId(subjectDAO.generateNextId());
+            subject.setName(name);
+            subject.setLevel(level);
+            subject.setFee(fee);
+            subject.setDescription(description);
+            subject.setStatus("active");
+
+            if (subjectDAO.insert(subject)) {
+                // 2. Insert Course gắn với Subject vừa tạo
+                Course course = new Course();
+                course.setId(courseDAO.generateNextId());
+                course.setSubjectId(subject.getId());
+                course.setTutorId(tutor.getId());
+                course.setStatus("active");
+
+                courseDAO.insert(course);
+            }
+        }
+
+        // Reload lại trang dashboard để thấy dữ liệu mới
+        resp.sendRedirect(req.getContextPath() + "/dashboard");
+    }
+
 }
