@@ -138,7 +138,6 @@ public class BookingServlet extends HttpServlet {
         }
 
         req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
-        req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
-        resp.sendRedirect(req.getContextPath() + "/home");
+        return;
     }
 }

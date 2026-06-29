@@ -17,7 +17,7 @@ public class DashboardServlet extends HttpServlet {
     private CourseDAO courseDAO = new CourseDAO();
     private PaymentDAO paymentDAO = new PaymentDAO();
     private ReviewDAO reviewDAO = new ReviewDAO();
-
+    private StudentDAO studentDAO = new StudentDAO();
     private TutorDAO tutorDAO = new TutorDAO();
 
     @Override
@@ -34,6 +34,12 @@ public class DashboardServlet extends HttpServlet {
         if (action != null && bookingId != null && account.getRole() == 2) {
             if (action.equals("confirm")) {
                 bookingDAO.updateStatus(bookingId, "confirmed");
+                Booking booking = bookingDAO.findById(bookingId);
+                if (booking != null && booking.getCourseId() != null) {
+                    if (!courseDAO.isStudentRegistered(booking.getCourseId(), booking.getStudentId())) {
+                        courseDAO.registerCourse(booking.getCourseId(), booking.getStudentId(), 10, "pending_payment");
+                    }
+                }
             } else if (action.equals("cancel")) {
                 bookingDAO.updateStatus(bookingId, "rejected");
             }
@@ -80,6 +86,11 @@ public class DashboardServlet extends HttpServlet {
                 studentCount = tutor.getTotalStudents();
             }
 
+            // Tutor real balance
+            Tutor freshTutor = tutorDAO.findById(tutor.getId());
+            long tutorBalance = (freshTutor != null) ? freshTutor.getBalance() : 0;
+            req.setAttribute("tutorBalance", String.format("%,d VND", tutorBalance));
+
             req.setAttribute("bookings", bookings);
             req.setAttribute("tutorBookings", bookings);
             req.setAttribute("courses", courses);
@@ -88,7 +99,7 @@ public class DashboardServlet extends HttpServlet {
 
             req.setAttribute("totalStudents", studentCount);
             req.setAttribute("totalCourses", courses.size());
-            req.setAttribute("monthlyIncome", String.format("%,d VNĐ", monthlyIncome));
+            req.setAttribute("monthlyIncome", String.format("%,d VND", monthlyIncome));
             req.setAttribute("averageRating", String.format("%.1f", avgRating));
 
             req.getRequestDispatcher("/jsp/auth/dashboard.jsp").forward(req, resp);
@@ -129,7 +140,12 @@ public class DashboardServlet extends HttpServlet {
 
             req.setAttribute("upcomingCount", upcomingCount);
             req.setAttribute("favoriteTutors", favoriteCount);
-            req.setAttribute("balance", "5,000,000 VNĐ"); // Mock balance for demonstration
+
+            // Real balance from DB
+            Student freshStudent = studentDAO.findById(student.getId());
+            long studentBalance = (freshStudent != null) ? freshStudent.getBalance() : 0;
+            if (freshStudent != null) session.setAttribute("userProfile", freshStudent);
+            req.setAttribute("balance", String.format("%,d VND", studentBalance));
 
             req.getRequestDispatcher("/jsp/auth/dashboard.jsp").forward(req, resp);
         } else {

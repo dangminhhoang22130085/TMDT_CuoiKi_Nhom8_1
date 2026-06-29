@@ -11,6 +11,7 @@ public class Student {
     private String description;
     private String avatar;
     private String accountId;
+    private long balance;
 
     public Student() {}
 
@@ -47,4 +48,7 @@ public class Student {
 
     public String getAccountId() { return accountId; }
     public void setAccountId(String accountId) { this.accountId = accountId; }
+
+    public long getBalance() { return balance; }
+    public void setBalance(long balance) { this.balance = balance; }
 }
