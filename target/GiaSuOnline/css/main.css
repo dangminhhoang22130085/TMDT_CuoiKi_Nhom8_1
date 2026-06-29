@@ -247,7 +247,8 @@ button {
 .dropdown-menu {
     position: absolute;
     right: 0;
-    top: calc(100% + 0.75rem);
+    top:100%;
+    transform: translateY(4px);
     min-width: 220px;
     background: white;
     border-radius: 1rem;

@@ -21,10 +21,6 @@
 
         <main class="admin-content">
             <section class="admin-section">
-                <c:if test="${not empty sessionScope.adminMessage}">
-                    <div class="alert alert-info" style="margin-bottom: 1rem; padding: 8px 12px; border-radius:4px; background-color:#f1c40f; color:#222;">${sessionScope.adminMessage}</div>
-                    <c:remove var="adminMessage" scope="session" />
-                </c:if>
                 <h1><i class="fas fa-users"></i> Quản Lý Người Dùng</h1>
                 <p>Danh sách người dùng đăng ký trên hệ thống TutorHub.</p>
 
