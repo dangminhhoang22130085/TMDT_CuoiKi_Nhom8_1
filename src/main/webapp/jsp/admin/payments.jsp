@@ -41,6 +41,7 @@
                         <thead>
                             <tr>
                                 <th>Mã GD</th>
+                                <th>Loại GD</th>
                                 <th>Học Sinh</th>
                                 <th>Gia Sư</th>
                                 <th>Số Tiền</th>
@@ -56,6 +57,13 @@
                                     <c:forEach var="pay" items="${requestScope.payments}">
                                         <tr>
                                             <td><code>${pay.id}</code></td>
+                                            <td>
+                                                <span style="font-size:0.78rem; font-weight:600; padding:3px 8px; border-radius:12px;
+                                                    background-color: ${pay.paymentType eq 'DEPOSIT' ? '#d4edda' : (pay.paymentType eq 'WITHDRAW' ? '#f8d7da' : '#cce5ff')};
+                                                    color: ${pay.paymentType eq 'DEPOSIT' ? '#155724' : (pay.paymentType eq 'WITHDRAW' ? '#721c24' : '#004085')};">
+                                                    ${pay.typeDisplay}
+                                                </span>
+                                            </td>
                                             <td><strong>${pay.student.name}</strong></td>
                                             <td><strong>${pay.tutor.name}</strong></td>
                                             <td style="color: #27ae60; font-weight: bold;">${pay.formattedAmount}</td>
@@ -106,7 +114,7 @@
                                 </c:when>
                                 <c:otherwise>
                                     <tr>
-                                        <td colspan="8" style="text-align: center; color: var(--gray-500); padding: 1.5rem 0;">Chưa có lịch sử giao dịch nào</td>
+                                        <td colspan="9" style="text-align: center; color: var(--gray-500); padding: 1.5rem 0;">Chưa có lịch sử giao dịch nào</td>
                                     </tr>
                                 </c:otherwise>
                             </c:choose>

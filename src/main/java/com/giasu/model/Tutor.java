@@ -19,6 +19,7 @@ public class Tutor {
     private String accountId;
     private int evaluate;
     private boolean verified;
+    private long balance;
 
     // Additional display fields
     private int totalStudents;
@@ -87,5 +88,8 @@ public class Tutor {
     public List<Course> getCourses() { return courses; }
     public void setCourses(List<Course> courses) { this.courses = courses; }
 
+    public long getBalance() { return balance; }
+    public void setBalance(long balance) { this.balance = balance; }
 
 }
+

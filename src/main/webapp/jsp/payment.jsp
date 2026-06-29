@@ -44,13 +44,13 @@
 
             <i class="fas fa-credit-card"></i>
 
-            Thanh Toán
+            Thanh Toán Học Phí
 
         </h1>
 
         <p>
 
-            Hoàn tất thanh toán khóa học
+            Xác nhận thanh toán từ ví điện tử TutorHub
 
         </p>
 
@@ -116,7 +116,7 @@
 
                         <strong>Khóa Học:</strong>
 
-                        ${requestScope.course.name}
+                        ${requestScope.course.subject.name}
 
                     </p>
 
@@ -124,10 +124,19 @@
 
                         <strong>Học Phí:</strong>
 
-                        ${requestScope.course.price} VNĐ
+                        <span style="font-size:1.3rem; font-weight:700; color:#e74c3c;">${requestScope.course.subject.formattedFee}</span>
 
                     </p>
 
+                </div>
+
+                <!-- Student wallet balance info -->
+                <div style="margin-top: 1rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, #f0f4ff, #e8f5e9); border-radius: 10px; border-left: 4px solid #6c63ff;">
+                    <p style="margin: 0; font-size: 0.9rem; color: #555;"><i class="fas fa-wallet" style="color:#6c63ff;"></i> <strong>Số dư ví hiện tại của bạn:</strong></p>
+                    <p style="margin: 4px 0 0 0; font-size: 1.2rem; font-weight: 700; color: #6c63ff;">${requestScope.balance} VND</p>
+                    <c:if test="${requestScope.insufficient}">
+                        <p style="margin: 6px 0 0 0; color: #e74c3c; font-size: 0.85rem;"><i class="fas fa-exclamation-triangle"></i> Số dư không đủ. <a href="${pageContext.request.contextPath}/wallet">Nạp thêm tiền &rarr;</a></p>
+                    </c:if>
                 </div>
 
             </div>
@@ -172,7 +181,7 @@
                             type="number"
                             name="amount"
                             class="form-input"
-                            value="${requestScope.course.price}"
+                            value="${requestScope.course.subject.fee}"
                             readonly
                     >
 
@@ -190,15 +199,21 @@
                             required
                     >
 
+                        <option value="wallet" selected>
+
+                            Ví Điện Tử TutorHub
+
+                        </option>
+
                         <option value="bank_transfer">
 
                             Chuyển Khoản Ngân Hàng
 
                         </option>
 
-                        <option value="vnpay">
+                        <option value="momo">
 
-                            VNPay
+                            MoMo
 
                         </option>
 

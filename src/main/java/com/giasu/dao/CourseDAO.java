@@ -179,4 +179,24 @@ public class CourseDAO {
         return false;
     }
 
-}
+    public boolean updateStatus(String courseId, String status) {
+        String sql = "UPDATE course SET status = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setString(2, courseId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) { e.printStackTrace(); }
+        return false;
+    }
+
+    /** Update course status within existing transaction */
+    public boolean updateStatus(String courseId, String status, Connection conn) throws SQLException {
+        String sql = "UPDATE course SET status = ? WHERE id = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, status);
+        ps.setString(2, courseId);
+        return ps.executeUpdate() > 0;
+    }
+
+}

@@ -24,28 +24,21 @@ public class BookingServlet extends HttpServlet {
         String action = req.getParameter("action");
         String courseId = req.getParameter("courseId");
         String tutorId = req.getParameter("tutorId");
+        String id = req.getParameter("id");
 
-        // --- XỬ LÝ ACTION: CONFIRM / CANCEL TỪ DASHBOARD ---
-        if (action != null && (action.equals("confirm") || action.equals("cancel"))) {
-            if (account == null) {
-                resp.sendRedirect(req.getContextPath() + "/jsp/auth/login.jsp");
-                return;
-            }
-
+        if ("confirm".equals(action) || "cancel".equals(action)) {
             String bookingId = req.getParameter("id");
             Booking booking = bookingDAO.findById(bookingId);
-
             if (booking != null) {
                 boolean authorized = false;
-
-                if (account.getRole() == 3) { // Admin
+                if (account.getRole() == 3) {
                     authorized = true;
-                } else if (account.getRole() == 2) { // Gia sư
+                } else if (account.getRole() == 2) {
                     Tutor tutor = (Tutor) session.getAttribute("userProfile");
                     if (tutor != null && booking.getTutorId().equals(tutor.getId())) {
                         authorized = true;
                     }
-                } else if (account.getRole() == 1 && action.equals("cancel")) { // Học sinh hủy
+                } else if (account.getRole() == 1 && "cancel".equals(action)) {
                     Student student = (Student) session.getAttribute("userProfile");
                     if (student != null && booking.getStudentId().equals(student.getId())) {
                         authorized = true;
@@ -53,7 +46,7 @@ public class BookingServlet extends HttpServlet {
                 }
 
                 if (authorized) {
-                    String status = action.equals("confirm") ? "confirmed" : "rejected";
+                    String status = "confirm".equals(action) ? "confirmed" : "cancelled";
                     bookingDAO.updateStatus(bookingId, status);
 
                     if ("confirmed".equals(status) && booking.getCourseId() != null) {
@@ -67,35 +60,46 @@ public class BookingServlet extends HttpServlet {
             return;
         }
 
-        // --- XỬ LÝ HIỂN THỊ FORM ĐẶT LỊCH (VIEW FORM) ---
-        // 1. Kiểm tra khóa học trước để đồng bộ hóa tutorId nếu bị thiếu trên URL
-        if (courseId != null && !courseId.trim().isEmpty()) {
-            Course course = courseDAO.findById(courseId);
-            req.setAttribute("selectedCourse", course);
-            if (course != null && (tutorId == null || tutorId.trim().isEmpty())) {
-                tutorId = course.getTutorId();
-            }
-        }
-
-        // 2. Nạp dữ liệu Gia sư và danh sách lớp để hiển thị lên form đặt lịch
-        if (tutorId != null && !tutorId.trim().isEmpty()) {
+        if (tutorId != null) {
             Tutor tutor = tutorDAO.findById(tutorId);
             List<Course> courses = courseDAO.findByTutorId(tutorId);
             req.setAttribute("tutor", tutor);
             req.setAttribute("courses", courses);
         }
+        if (courseId != null) {
+            Course course = courseDAO.findById(courseId);
+            req.setAttribute("selectedCourse", course);
+        }
 
-        // ĐÃ SỬA: Chỉ gọi duy nhất 1 lần forward sang file giao diện
-        req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
+        if (action != null && id != null) {
+            // Gia sư chấp nhận học viên -> status: confirmed
+            if (action.equals("confirm")) {
+                bookingDAO.updateStatus(id, "confirmed");
+            }
+            // Gia sư từ chối HOẶC Học viên hủy -> status: cancelled/rejected
+            else if (action.equals("cancel")) {
+                bookingDAO.updateStatus(id, "rejected");
+            }
+
+            // Xử lý xong quay lại trang Dashboard
+            resp.sendRedirect(req.getContextPath() + "/dashboard");
+            return;
+        }
+
+
+
     }
+
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
+        Account account = (Account) session.getAttribute("account");
         Student student = (Student) session.getAttribute("userProfile");
 
         if (student == null) {
-            resp.sendRedirect(req.getContextPath() + "/jsp/auth/login.jsp");
+            resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
@@ -122,28 +126,18 @@ public class BookingServlet extends HttpServlet {
         booking.setNote(note);
 
         try {
-            if (bookingTimeStr != null && !bookingTimeStr.trim().isEmpty()) {
-                booking.setBookingTime(Timestamp.valueOf(bookingTimeStr.replace("T", " ") + ":00"));
-            } else {
-                booking.setBookingTime(new Timestamp(System.currentTimeMillis()));
-            }
+            booking.setBookingTime(Timestamp.valueOf(bookingTimeStr.replace("T", " ") + ":00"));
         } catch (Exception e) {
             booking.setBookingTime(new Timestamp(System.currentTimeMillis()));
         }
 
         if (bookingDAO.insert(booking)) {
-            session.setAttribute("successMessage", "Đặt lịch thành công! Vui lòng chờ gia sư xác nhận.");
-            resp.sendRedirect(req.getContextPath() + "/dashboard");
+            req.setAttribute("success", "Đặt lịch thành công! Vui lòng chờ gia sư xác nhận.");
         } else {
             req.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại!");
-            if (tutorId != null) {
-                req.setAttribute("tutor", tutorDAO.findById(tutorId));
-                req.setAttribute("courses", courseDAO.findByTutorId(tutorId));
-            }
-            if (courseId != null) {
-                req.setAttribute("selectedCourse", courseDAO.findById(courseId));
-            }
-            req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
         }
+
+        req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
+        return;
     }
 }
