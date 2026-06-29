@@ -233,6 +233,7 @@ public class TutorDAO {
         t.setAccountId(rs.getString("account_id"));
         t.setEvaluate(rs.getInt("evaluate"));
         t.setVerified(rs.getBoolean("verified"));
+        try { t.setBalance(rs.getLong("balance")); } catch (Exception e) {}
         return t;
     }
     public List<Tutor> searchAdvanced(String keyword, String subjectName, String level, Integer minPrice, Integer maxPrice, Integer minRating) {
@@ -264,8 +265,19 @@ public class TutorDAO {
             params.add(kw); params.add(kw);
         }
         if (level != null && !level.trim().isEmpty()) {
-            sql.append(" AND s.level ILIKE ?");
-            params.add("%" + level.trim() + "%");
+            String lvl = level.trim();
+            if (lvl.equalsIgnoreCase("Tiểu Học")) {
+                sql.append(" AND (s.level ILIKE '%Lớp 1%' OR s.level ILIKE '%Lớp 2%' OR s.level ILIKE '%Lớp 3%' OR s.level ILIKE '%Lớp 4%' OR s.level ILIKE '%Lớp 5%')");
+            } else if (lvl.equalsIgnoreCase("THCS")) {
+                sql.append(" AND (s.level ILIKE '%Lớp 6%' OR s.level ILIKE '%Lớp 7%' OR s.level ILIKE '%Lớp 8%' OR s.level ILIKE '%Lớp 9%')");
+            } else if (lvl.equalsIgnoreCase("THPT")) {
+                sql.append(" AND (s.level ILIKE '%Lớp 10%' OR s.level ILIKE '%Lớp 11%' OR s.level ILIKE '%Lớp 12%')");
+            } else if (lvl.equalsIgnoreCase("Ngoại Ngữ")) {
+                sql.append(" AND (s.level ILIKE '%IELTS%' OR s.level ILIKE '%TOEIC%' OR s.level ILIKE '%Giao tiếp%' OR s.level ILIKE '%Ngoại Ngữ%' OR s.name ILIKE '%Tiếng Anh%')");
+            } else {
+                sql.append(" AND s.level ILIKE ?");
+                params.add("%" + lvl + "%");
+            }
         }
         if (minPrice != null) {
             sql.append(" AND s.fee >= ?");
@@ -300,4 +312,49 @@ public class TutorDAO {
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
     }
+
+    public boolean updateEvaluate(String tutorId, double evaluate) {
+        String sql = "UPDATE tutor SET evaluate = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, (int) Math.round(evaluate));
+            ps.setString(2, tutorId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) { e.printStackTrace(); }
+        return false;
+    }
+
+    /** Update balance by delta within an existing transaction connection */
+    public boolean updateBalance(String tutorId, long delta, Connection conn) throws SQLException {
+        String sql = "UPDATE tutor SET balance = balance + ? WHERE id = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setLong(1, delta);
+        ps.setString(2, tutorId);
+        return ps.executeUpdate() > 0;
+    }
+
+    /** Update balance by delta (standalone) */
+    public boolean updateBalance(String tutorId, long delta) {
+        String sql = "UPDATE tutor SET balance = balance + ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, delta);
+            ps.setString(2, tutorId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) { e.printStackTrace(); }
+        return false;
+    }
+
+    /** Reload latest balance from DB */
+    public long getBalance(String tutorId) {
+        String sql = "SELECT balance FROM tutor WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, tutorId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getLong(1);
+        } catch (SQLException e) { e.printStackTrace(); }
+        return 0;
+    }
 }
+

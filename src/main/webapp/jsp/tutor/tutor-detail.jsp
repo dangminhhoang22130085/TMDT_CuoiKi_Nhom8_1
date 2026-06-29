@@ -134,10 +134,35 @@
 
             <div class="content-section">
                 <h3><i class="fas fa-comments"></i> Phản Hồi Từ Phụ Huynh & Học Sinh</h3>
-                <p style="color: var(--gray-500); font-style: italic; text-align: center; padding: 1rem 0;">
-                    <i class="fas fa-comment-slash" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; color: var(--gray-300);"></i>
-                    Các đánh giá chi tiết của lớp học sẽ tự động tải lên từ hệ thống cơ sở dữ liệu.
-                </p>
+                <c:choose>
+                    <c:when test="${not empty requestScope.reviews}">
+                        <div class="reviews-list" style="display: flex; flex-direction: column; gap: 15px;">
+                            <c:forEach var="rev" items="${requestScope.reviews}">
+                                <div class="review-card" style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                    <div class="review-card-header" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="font-weight: bold; color: #1e293b;"><i class="fas fa-user-circle"></i> ${rev.student.name}</span>
+                                        <span style="color: #f59e0b;">
+                                            <c:forEach begin="1" end="${rev.rating}">
+                                                <i class="fas fa-star"></i>
+                                            </c:forEach>
+                                            <c:forEach begin="${rev.rating + 1}" end="5">
+                                                <i class="far fa-star" style="color: #cbd5e1;"></i>
+                                            </c:forEach>
+                                        </span>
+                                    </div>
+                                    <p style="margin: 0; color: #475569;">${rev.comment}</p>
+                                    <small style="color: #94a3b8; display: block; margin-top: 5px;">${rev.createdAt}</small>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <p style="color: var(--gray-500); font-style: italic; text-align: center; padding: 1rem 0;">
+                            <i class="fas fa-comment-slash" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; color: var(--gray-300);"></i>
+                            Gia sư này chưa có phản hồi nào từ phụ huynh & học sinh.
+                        </p>
+                    </c:otherwise>
+                </c:choose>
             </div>
 
         </div>
