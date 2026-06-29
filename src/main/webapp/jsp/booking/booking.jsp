@@ -60,7 +60,7 @@
 
                             <c:choose>
                                 <c:when test="${not empty requestScope.tutor.avatar}">
-                                    <img src="<c:url value='/images/${requestScope.tutor.avatar}'/>"
+                                    <img src="<c:url value='/images/tutors/${requestScope.tutor.avatar}'/>"
                                          alt="${requestScope.tutor.name}">
                                 </c:when>
                                 <c:otherwise>

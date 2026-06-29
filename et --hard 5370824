@@ -1,0 +1,20 @@
+[33ma2f5230[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdat[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m Merge pull request #10 from dangminhhoang22130085/dung
+[33m89bdc35[m fix: resolve merge conflicts in main.js with main branch
+[33m32c5205[m feat: optimize UI for login and register pages with 2-column grid layout
+[33mf1f36e1[m Merge pull request #9 from dangminhhoang22130085/dat
+[33m5370824[m[33m ([m[1;31morigin/dat[m[33m)[m chỉnh nút chọn lớp khi xem chi tiết
+[33mcc16f0e[m Merge pull request #8 from dangminhhoang22130085/dat
+[33m99d6981[m Chỉnh sửa hoạt động slider (thẻ) gia sư nổi bặc ở trang chủ
+[33madfded9[m Merge pull request #7 from dangminhhoang22130085/dat
+[33m1ce26c5[m Chỉnh lại tìm môn học hiển thị lớp học
+[33m5ce6c48[m Merge pull request #6 from dangminhhoang22130085/dat
+[33m180e448[m Đã thêm chức năng gia sư thêm khóa học, duyệt học viên
+[33m0751009[m Xoa bo hoan toan thu muc target bi xung dot
+[33m4a74879[m Cập nhật logjic hiển hiện thông tin lớp, phản hồi, số lượng học sinh trong chi tiết gia sư
+[33mc46a26a[m Merge pull request #4 from dangminhhoang22130085/hoang
+[33m12dc9ff[m update code
+[33m48a9fa0[m Merge pull request #3 from dangminhhoang22130085/phu
+[33mf96807f[m Merge branch 'main' into phu
+[33m7f0a60e[m test
+[33mb3b854b[m xử lí đặt lịch
+[33m9b02426[m thêm trường đăng kí
