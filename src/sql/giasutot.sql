@@ -217,40 +217,24 @@ CREATE TABLE interest (
 -- DỮ LIỆU MẪU
 -- ============================================
 
--- Accounts (password = '123456' cho tất cả)
-INSERT INTO account (id, email, password, role, status) VALUES
-('acc001', 'phuhuynh1@gmail.com', '123456', 1, 'active'),
-('acc002', 'phuhuynh2@gmail.com', '123456', 1, 'active'),
-('acc003', 'phuhuynh3@gmail.com', '123456', 1, 'active'),
-('acc004', 'giasu1@gmail.com', '123456', 2, 'active'),
-('acc005', 'giasu2@gmail.com', '123456', 2, 'active'),
-('acc006', 'giasu3@gmail.com', '123456', 2, 'active'),
-('acc007', 'giasu4@gmail.com', '123456', 2, 'active'),
-('acc008', 'giasu5@gmail.com', '123456', 2, 'active'),
-('acc009', 'admin@gmail.com', '123456', 3, 'active'),
-('acc010', 'phuhuynh4@gmail.com', '123456', 1, 'active'),
-('acc011', 'giasu6@gmail.com', '123456', 2, 'inactive'),
-('acc012', 'phuhuynh5@gmail.com', '123456', 1, 'active');
+-- 1. Account
+INSERT INTO public.account (id, email, password, role, status, reset_token, created_at) VALUES
+('acc001', 'phuhuynh1@gmail.com', '123456', 1, 'active', NULL, '2026-06-08 15:34:57.424066'),
+('acc003', 'phuhuynh3@gmail.com', '123456', 1, 'active', NULL, '2026-06-08 15:34:57.424066'),
+('acc004', 'giasu1@gmail.com', '123456', 2, 'active', NULL, '2026-06-08 15:34:57.424066'),
+('acc005', 'giasu2@gmail.com', '123456', 2, 'active', NULL, '2026-06-08 15:34:57.424066'),
+('acc006', 'giasu3@gmail.com', '123456', 2, 'active', NULL, '2026-06-08 15:34:57.424066'),
+('acc007', 'giasu4@gmail.com', '123456', 2, 'active', NULL, '2026-06-08 15:34:57.424066'),
+('acc008', 'giasu5@gmail.com', '123456', 2, 'active', NULL, '2026-06-08 15:34:57.424066'),
+('acc009', 'admin@gmail.com', '123456', 3, 'active', NULL, '2026-06-08 15:34:57.424066'),
+('acc010', 'phuhuynh4@gmail.com', '123456', 1, 'active', NULL, '2026-06-08 15:34:57.424066'),
+('acc012', 'phuhuynh5@gmail.com', '123456', 1, 'active', NULL, '2026-06-08 15:34:57.424066'),
+('acc011', 'giasu6@gmail.com', '123456', 2, 'active', NULL, '2026-06-08 15:34:57.424066'),
+('acc013', 'dangminhhoang2004thd@gmail.com', '12313', 2, 'active', NULL, '2026-06-09 11:50:21.515933'),
+('acc002', 'phuhuynh2@gmail.com', '123456', 1, 'inactive', NULL, '2026-06-08 15:34:57.424066');
 
--- Students / Phụ huynh
-INSERT INTO student (id, name, phone, address, birth, description, account_id) VALUES
-('st001', 'Nguyễn Văn Nghĩa', '0901111001', 'Quận 1, TP.HCM', '2005-01-15', 'Cần tìm gia sư Toán cho con lớp 10', 'acc001'),
-('st002', 'Lê Thị Liên', '0901111002', 'Quận 3, TP.HCM', '2006-03-20', 'Muốn con học thêm Tiếng Anh giao tiếp', 'acc002'),
-('st003', 'Trần Văn Nhỏ', '0901111003', 'Quận 7, TP.HCM', '2004-07-10', 'Tìm gia sư Hóa học cho con', 'acc003'),
-('st004', 'Phạm Thị Dung', '0901111004', 'Quận Bình Thạnh, TP.HCM', '2005-11-25', 'Cần gia sư dạy kèm tại nhà', 'acc010'),
-('st005', 'Hoàng Minh Tuấn', '0901111005', 'Quận 5, TP.HCM', '2007-02-14', 'Muốn học thêm Vật lý', 'acc012');
-
--- Tutors / Gia sư
-INSERT INTO tutor (id, name, email, birth, phone, address, specialization, description, id_card_number, bank_account_number, bank_name, account_id, evaluate, verified) VALUES
-('tut001', 'Nguyễn Tuấn Cảnh', 'giasu1@gmail.com', '1990-01-15', '0901000001', 'Quận 1, TP.HCM', 'Toán', 'Thạc sĩ Toán học, 10 năm kinh nghiệm dạy Toán lớp 10-12. Nhiều học sinh đạt giải HSG cấp thành phố.', 123456789012, 123456789012345, 'BIDV', 'acc004', 5, 1),
-('tut002', 'Trần Thị Mai', 'giasu2@gmail.com', '1988-05-12', '0901000002', 'Quận 3, TP.HCM', 'Tiếng Anh', 'IELTS 8.0, chuyên luyện giao tiếp và luyện thi IELTS. Từng du học tại Úc.', 123456789013, 123456789012346, 'Sacombank', 'acc005', 4, 1),
-('tut003', 'Lê Hoàng Minh', 'giasu3@gmail.com', '1992-07-07', '0901000003', 'Quận 7, TP.HCM', 'Hóa học', 'Giáo viên trường chuyên, 8 năm kinh nghiệm. Phương pháp dạy trực quan, dễ hiểu.', 123456789014, 123456789012347, 'Techcombank', 'acc006', 4, 1),
-('tut004', 'Phạm Minh Hương', 'giasu4@gmail.com', '1991-09-20', '0901000004', 'Quận Bình Thạnh, TP.HCM', 'Vật lý', 'Tiến sĩ Vật lý, giảng viên đại học. Dạy nhiệt tình, tận tâm.', 123456789015, 123456789012348, 'MB Bank', 'acc007', 5, 1),
-('tut005', 'Nguyễn Thu Hà', 'giasu5@gmail.com', '1993-03-08', '0901000005', 'Quận 5, TP.HCM', 'Ngữ văn', 'Cử nhân Sư phạm Ngữ văn, 6 năm kinh nghiệm. Giúp học sinh yêu thích môn Văn.', 123456789016, 123456789012349, 'TPBank', 'acc008', 3, 1),
-('tut006', 'Đỗ Văn Thành', 'giasu6@gmail.com', '1995-11-11', '0901000006', 'Quận Tân Bình, TP.HCM', 'Toán', 'Sinh viên năm cuối ĐH Bách Khoa. Dạy Toán cấp 2 và 3.', 123456789017, 123456789012350, 'Agribank', 'acc011', 0, 0);
-
--- Subjects / Môn học
-INSERT INTO subject (id, name, level, description, fee, status) VALUES
+-- 2. Subject
+INSERT INTO public.subject (id, name, level, description, fee, status) VALUES
 ('sub001', 'Toán', 'Lớp 10', 'Toán nâng cao lớp 10 - Đại số và Hình học', 2000000, 'active'),
 ('sub002', 'Tiếng Anh', 'Giao tiếp', 'Tiếng Anh giao tiếp cơ bản đến nâng cao', 1800000, 'active'),
 ('sub003', 'Hóa học', 'Lớp 10', 'Hóa học cơ bản và nâng cao lớp 10', 1900000, 'active'),
@@ -262,21 +246,45 @@ INSERT INTO subject (id, name, level, description, fee, status) VALUES
 ('sub009', 'Toán', 'Lớp 5', 'Toán nâng cao lớp 5 - Bồi dưỡng HSG', 1600000, 'active'),
 ('sub010', 'Vật lý', 'Lớp 11', 'Vật lý nâng cao lớp 11', 2000000, 'active');
 
--- Courses / Khóa học
-INSERT INTO course (id, subject_id, tutor_id, time) VALUES
-('course001', 'sub001', 'tut001', '2025-05-01 08:00:00'),
-('course002', 'sub002', 'tut002', '2025-05-02 09:00:00'),
-('course003', 'sub003', 'tut003', '2025-05-03 10:00:00'),
-('course004', 'sub004', 'tut004', '2025-06-01 08:00:00'),
-('course005', 'sub005', 'tut005', '2025-06-15 09:00:00'),
-('course006', 'sub006', 'tut001', '2025-07-01 14:00:00'),
-('course007', 'sub007', 'tut002', '2025-07-01 10:00:00'),
-('course008', 'sub008', 'tut003', '2025-07-15 08:00:00'),
-('course009', 'sub009', 'tut001', '2025-08-01 08:00:00'),
-('course010', 'sub010', 'tut004', '2025-08-01 14:00:00');
+-- 3. Tutor
+INSERT INTO public.tutor (id, name, email, birth, phone, address, specialization, description, id_card_number, bank_account_number, bank_name, avatar, account_id, evaluate, verified) VALUES
+('tut001', 'Nguyễn Tuấn Cảnh', 'giasu1@gmail.com', '1990-01-15', '0901000001', 'Quận 1, TP.HCM', 'Toán', 'Thạc sĩ Toán học, 10 năm kinh nghiệm.', 123456789012, 123456789012345, 'BIDV', 'giasutoan-TuanCanh.png', 'acc004', 5, 1),
+('tut002', 'Trần Thị Mai', 'giasu2@gmail.com', '1988-05-12', '0901000002', 'Quận 3, TP.HCM', 'Tiếng Anh', 'IELTS 8.0, chuyên luyện giao tiếp.', 123456789013, 123456789012346, 'Sacombank', 'giasuTiengAnh-TranThiMai.png', 'acc005', 4, 1),
+('tut003', 'Lê Hoàng Minh', 'giasu3@gmail.com', '1992-07-07', '0901000003', 'Quận 7, TP.HCM', 'Hóa học', 'Giáo viên trường chuyên, 8 năm kinh nghiệm.', 123456789014, 123456789012347, 'Techcombank', 'giasuHoaHoc-LeHoangMinh.png', 'acc006', 4, 1),
+('tut004', 'Phạm Minh Hương', 'giasu4@gmail.com', '1991-09-20', '0901000004', 'Quận Bình Thạnh, TP.HCM', 'Vật lý', 'Tiến sĩ Vật lý, giảng viên đại học.', 123456789015, 123456789012348, 'MB Bank', 'giasuVatLi-PhamMinhHuong.png', 'acc007', 5, 1),
+('tut005', 'Nguyễn Thu Hà', 'giasu5@gmail.com', '1993-03-08', '0901000005', 'Quận 5, TP.HCM', 'Ngữ văn', 'Cử nhân Sư phạm Ngữ văn.', 123456789016, 123456789012349, 'TPBank', 'giasuNguVan-NguyenThuHa.png', 'acc008', 3, 1),
+('tut006', 'Đỗ Văn Thành', 'giasu6@gmail.com', '1995-11-11', '0901000006', 'Quận Tân Bình, TP.HCM', 'Toán', 'Sinh viên năm cuối ĐH Bách Khoa.', 123456789017, 123456789012350, 'Agribank', 'default-avatar.png', 'acc011', 0, 0),
+('tut007', 'UIA', 'dangminhhoang2004thd@gmail.com', '2000-12-13', '0901111004', 'wer', 'Toán', '', 24252323, 5345233, 'MB bank', 'default-avatar.png', 'acc013', 0, 1);
+-- 4. Course
+INSERT INTO public.course VALUES 
+('course001', 'sub001', 'tut001', '2025-05-01 08:00:00', 'active'),
+('course002', 'sub002', 'tut002', '2025-05-02 09:00:00', 'active'),
+('course003', 'sub003', 'tut003', '2025-05-03 10:00:00', 'active'),
+('course004', 'sub004', 'tut004', '2025-06-01 08:00:00', 'active'),
+('course005', 'sub005', 'tut005', '2025-06-15 09:00:00', 'active'),
+('course006', 'sub006', 'tut001', '2025-07-01 14:00:00', 'active'),
+('course007', 'sub007', 'tut002', '2025-07-01 10:00:00', 'active'),
+('course008', 'sub008', 'tut003', '2025-07-15 08:00:00', 'active'),
+('course009', 'sub009', 'tut001', '2025-08-01 08:00:00', 'active'),
+('course010', 'sub010', 'tut004', '2025-08-01 14:00:00', 'active');
 
--- Registered Subjects
-INSERT INTO registered_subjects (course_id, student_id, registration_date, number_of_lessons, status) VALUES
+-- 5. Student
+INSERT INTO public.student (id, name, phone, address, birth, description, avatar, account_id) VALUES
+('st001', 'Nguyễn Văn Nghĩa', '0901111001', 'Quận 1, TP.HCM', '2005-01-15', 'Cần tìm gia sư Toán cho con lớp 10', 'default-avatar.png', 'acc001'),
+('st002', 'Lê Thị Liên', '0901111002', 'Quận 3, TP.HCM', '2006-03-20', 'Muốn con học thêm Tiếng Anh giao tiếp', 'default-avatar.png', 'acc002'),
+('st003', 'Trần Văn Nhỏ', '0901111003', 'Quận 7, TP.HCM', '2004-07-10', 'Tìm gia sư Hóa học cho con', 'default-avatar.png', 'acc003'),
+('st005', 'Hoàng Minh Tuấn', '0901111005', 'Quận 5, TP.HCM', '2007-02-14', 'Muốn học thêm Vật lý', 'default-avatar.png', 'acc012'),
+('st004', 'Phạm Thị Dung', '0901111004', 'Quận Bình Thạnh, TP.HCM', '2005-11-25', 'Cần gia sư dạy kèm tại nhà', 'default-avatar.png', 'acc010');
+-- 6. Booking
+INSERT INTO public.booking VALUES 
+('bk001', 'course001', 'tut001', 'st001', '2025-05-01 08:00:00', 'confirmed', 'Học tại nhà', '2026-06-08 15:34:57.424066'),
+('bk002', 'course002', 'tut002', 'st002', '2025-05-02 09:00:00', 'confirmed', 'Học online qua Zoom', '2026-06-08 15:34:57.424066'),
+('bk004', 'course006', 'tut001', 'st005', '2025-07-01 14:00:00', 'pending', 'Con học lớp 6', '2026-06-08 15:34:57.424066'),
+('bk003', 'course004', 'tut004', 'st004', '2025-06-01 08:00:00', 'cancelled', 'Muốn học thử 1 buổi', '2026-06-08 15:34:57.424066'),
+('bk005', 'course001', 'tut001', 'st004', '2026-06-09 12:01:00', 'pending', '', '2026-06-09 12:01:46.409556');
+
+-- 8. Registered Subjects
+INSERT INTO public.registered_subjects (course_id, student_id, registration_date, number_of_lessons, status) VALUES
 ('course001', 'st001', '2025-04-25', 10, 'completed'),
 ('course002', 'st002', '2025-04-26', 8, 'registered'),
 ('course003', 'st003', '2025-04-27', 12, 'registered'),
@@ -285,27 +293,8 @@ INSERT INTO registered_subjects (course_id, student_id, registration_date, numbe
 ('course006', 'st005', '2025-06-20', 15, 'pending_approval'),
 ('course007', 'st002', '2025-06-25', 10, 'registered');
 
--- Bookings
-INSERT INTO booking (id, course_id, tutor_id, student_id, booking_time, status, note) VALUES
-('bk001', 'course001', 'tut001', 'st001', '2025-05-01 08:00:00', 'confirmed', 'Học tại nhà'),
-('bk002', 'course002', 'tut002', 'st002', '2025-05-02 09:00:00', 'confirmed', 'Học online qua Zoom'),
-('bk003', 'course004', 'tut004', 'st004', '2025-06-01 08:00:00', 'pending', 'Muốn học thử 1 buổi'),
-('bk004', 'course006', 'tut001', 'st005', '2025-07-01 14:00:00', 'pending', 'Con học lớp 6');
-
--- Payments
-INSERT INTO payment (id, course_id, tutor_id, student_id, amount, payment_date, payment_method, status) VALUES
-('pay001', 'course001', 'tut001', 'st001', 20000000, '2025-04-26 10:00:00', 'bank_transfer', 'completed'),
-('pay002', 'course002', 'tut002', 'st002', 14400000, '2025-04-27 11:00:00', 'bank_transfer', 'completed'),
-('pay003', 'course003', 'tut003', 'st003', 22800000, '2025-04-28 09:00:00', 'bank_transfer', 'pending');
-
--- Reviews
-INSERT INTO review (id, tutor_id, student_id, course_id, rating, comment) VALUES
-('rev001', 'tut001', 'st001', 'course001', 5, 'Thầy dạy rất hay, con tiến bộ nhiều. Rất recommend!'),
-('rev002', 'tut002', 'st002', 'course002', 4, 'Cô dạy nhiệt tình, phát âm chuẩn. Con tự tin giao tiếp hơn.'),
-('rev003', 'tut001', 'st004', NULL, 5, 'Thầy Cảnh rất kiên nhẫn và tận tâm với học sinh.');
-
--- Lessons
-INSERT INTO lesson (course_id, student_id, status, time) VALUES
+-- 9. Lesson
+INSERT INTO public.lesson (course_id, student_id, status, time) VALUES
 ('course001', 'st001', 'completed', '2025-05-01 08:00:00'),
 ('course001', 'st001', 'completed', '2025-05-03 08:00:00'),
 ('course001', 'st001', 'completed', '2025-05-05 08:00:00'),
@@ -317,28 +306,27 @@ INSERT INTO lesson (course_id, student_id, status, time) VALUES
 ('course003', 'st003', 'scheduled', '2025-05-03 10:00:00'),
 ('course003', 'st003', 'scheduled', '2025-05-05 10:00:00');
 
--- Notifications
-INSERT INTO notifications (id, account_id, title, message, type, is_read) VALUES
-('notif001', 'acc001', 'Đặt lịch thành công', 'Bạn đã đặt lịch học Toán với gia sư Nguyễn Tuấn Cảnh thành công.', 'success', 1),
-('notif002', 'acc004', 'Booking mới', 'Phụ huynh Phạm Thị Dung muốn đặt lịch học Vật lý.', 'info', 0),
-('notif003', 'acc009', 'Gia sư mới đăng ký', 'Gia sư Đỗ Văn Thành đã đăng ký và chờ duyệt hồ sơ.', 'warning', 0);
+-- 10. Payment
+INSERT INTO public.payment (id, course_id, tutor_id, student_id, amount, payment_date, payment_method, status) VALUES
+('pay001', 'course001', 'tut001', 'st001', 20000000, '2025-04-26 10:00:00', 'bank_transfer', 'completed'),
+('pay002', 'course002', 'tut002', 'st002', 14400000, '2025-04-27 11:00:00', 'bank_transfer', 'completed'),
+('pay003', 'course003', 'tut003', 'st003', 22800000, '2025-04-28 09:00:00', 'bank_transfer', 'completed');
 
--- Interest (Yêu thích)
-INSERT INTO interest (id_st, id_tt) VALUES
+-- 11. Review
+INSERT INTO public.review (id, tutor_id, student_id, course_id, rating, comment, created_at) VALUES
+('rev001', 'tut001', 'st001', 'course001', 5, 'Thầy dạy rất hay, con tiến bộ nhiều. Rất recommend!', '2026-06-08 15:34:57'),
+('rev002', 'tut002', 'st002', 'course002', 4, 'Cô dạy nhiệt tình, phát âm chuẩn. Con tự tin giao tiếp hơn.', '2026-06-08 15:34:57'),
+('rev003', 'tut001', 'st004', NULL, 5, 'Thầy Cảnh rất kiên nhẫn và tận tâm với học sinh.', '2026-06-08 15:34:57');
+
+-- 12. Interest
+INSERT INTO public.interest (id_st, id_tt) VALUES
 ('st001', 'tut001'),
 ('st001', 'tut004'),
 ('st002', 'tut002'),
 ('st003', 'tut003');
 
-UPDATE tutor SET avatar = 'giasutoan-TuanCanh.png' WHERE id = 'tut001';
-UPDATE tutor SET avatar = 'giasuTiengAnh-TranThiMai.png' WHERE id = 'tut002';
-UPDATE tutor SET avatar = 'giasuHoaHoc-LeHoangMinh.png' WHERE id = 'tut003';
-UPDATE tutor SET avatar = 'giasuVatLi-PhamMinhHuong.png' WHERE id = 'tut004';
-UPDATE tutor SET avatar = 'giasuNguVan-NguyenThuHa.png' WHERE id = 'tut005';
-
--- ============================================
--- Dữ liệu khiếu nại mẫu
--- ============================================
-INSERT INTO complaint (id, booking_id, student_id, title, description, status) VALUES
-('comp001', 'bk001', 'st001', 'Gia sư đi trễ', 'Gia sư thường xuyên đi trễ 15-20 phút và không dạy bù.', 'pending'),
-('comp002', 'bk002', 'st002', 'Lớp học không đúng chất lượng', 'Gia sư không chuẩn bị bài giảng chu đáo như cam kết.', 'resolved');
+-- 13. Notifications
+INSERT INTO public.notifications (id, account_id, title, message, type, created_at, is_read, status) VALUES
+('notif001', 'acc001', 'Đặt lịch thành công', 'Bạn đã đặt lịch học Toán với gia sư Nguyễn Tuấn Cảnh thành công.', 'success', '2026-06-08 15:34:57', 1, 'sent'),
+('notif002', 'acc004', 'Booking mới', 'Phụ huynh Phạm Thị Dung muốn đặt lịch học Vật lý.', 'info', '2026-06-08 15:34:57', 0, 'sent'),
+('notif003', 'acc009', 'Gia sư mới đăng ký', 'Gia sư Đỗ Văn Thành đã đăng ký và chờ duyệt hồ sơ.', 'warning', '2026-06-08 15:34:57', 0, 'sent');
