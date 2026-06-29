@@ -149,8 +149,34 @@ public class CourseDAO {
         return false;
     }
 
-    // ================= TẠO KHÓA HỌC =================
-    // Tạo ID tự động (c001, c002...)
+    // ================= UPDATE STATUS =================
+    public boolean updateStatus(String courseId, String status, Connection conn) throws SQLException {
+        String sql = "UPDATE course SET status = ? WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setString(2, courseId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    // ================= INSERT =================
+    public boolean insert(Course c) {
+        String sql = "INSERT INTO course (id, subject_id, tutor_id, time, status) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, c.getId().trim());
+            ps.setString(2, c.getSubjectId().trim());
+            ps.setString(3, c.getTutorId().trim());
+            ps.setTimestamp(4, c.getTime() != null ? c.getTime() : new Timestamp(System.currentTimeMillis()));
+            ps.setString(5, c.getStatus() != null ? c.getStatus() : "active");
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // ================= GENERATE NEXT ID =================
     public String generateNextId() {
         String sql = "SELECT id FROM course ORDER BY id DESC LIMIT 1";
         try (Connection conn = DBConnection.getConnection();
@@ -158,45 +184,12 @@ public class CourseDAO {
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 String lastId = rs.getString("id").trim();
-                int num = Integer.parseInt(lastId.replace("c", "")) + 1;
-                return String.format("c%03d", num);
+                int num = Integer.parseInt(lastId.replace("course", "").trim()) + 1;
+                return String.format("course%03d", num);
             }
-        } catch (Exception e) { e.printStackTrace(); }
-        return "c001";
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "course001";
     }
-
-    // Insert Khóa học mới
-    public boolean insert(Course c) {
-        String sql = "INSERT INTO course (id, subject_id, tutor_id, time, status) VALUES (?, ?, ?, CURRENT_TIMESTAMP, ?)";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, c.getId());
-            ps.setString(2, c.getSubjectId());
-            ps.setString(3, c.getTutorId());
-            ps.setString(4, c.getStatus());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) { e.printStackTrace(); }
-        return false;
-    }
-
-    public boolean updateStatus(String courseId, String status) {
-        String sql = "UPDATE course SET status = ? WHERE id = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, status);
-            ps.setString(2, courseId);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) { e.printStackTrace(); }
-        return false;
-    }
-
-    /** Update course status within existing transaction */
-    public boolean updateStatus(String courseId, String status, Connection conn) throws SQLException {
-        String sql = "UPDATE course SET status = ? WHERE id = ?";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1, status);
-        ps.setString(2, courseId);
-        return ps.executeUpdate() > 0;
-    }
-
-}
+}

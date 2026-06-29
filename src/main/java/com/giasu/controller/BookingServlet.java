@@ -20,8 +20,19 @@ public class BookingServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
 
         String action = req.getParameter("action");
+
+        String courseId = req.getParameter("courseId");
+        if (courseId != null) courseId = courseId.trim();
+        String tutorId = req.getParameter("tutorId");
+        if (tutorId != null) tutorId = tutorId.trim();
+        String id = req.getParameter("id");
+
 
         if ("confirm".equals(action) || "cancel".equals(action)) {
             String bookingId = req.getParameter("id");
@@ -57,17 +68,15 @@ public class BookingServlet extends HttpServlet {
             return;
         }
 
-        // Show booking form
-        String courseId = req.getParameter("courseId");
-        String tutorId = req.getParameter("tutorId");
 
-        if (tutorId != null) {
+        // Show booking form
+        if (tutorId != null && !tutorId.isEmpty()) {
             Tutor tutor = tutorDAO.findById(tutorId);
             List<Course> courses = courseDAO.findByTutorId(tutorId);
             req.setAttribute("tutor", tutor);
             req.setAttribute("courses", courses);
         }
-        if (courseId != null) {
+        if (courseId != null && !courseId.isEmpty()) {
             Course course = courseDAO.findById(courseId);
             req.setAttribute("selectedCourse", course);
         }
@@ -87,7 +96,11 @@ public class BookingServlet extends HttpServlet {
         }
 
         String courseId = req.getParameter("courseId");
+        if (courseId != null)
+            courseId = courseId.trim();
         String tutorId = req.getParameter("tutorId");
+        if (tutorId != null)
+            tutorId = tutorId.trim();
         String bookingTimeStr = req.getParameter("bookingTime");
         String note = req.getParameter("note");
 
@@ -115,11 +128,11 @@ public class BookingServlet extends HttpServlet {
         }
 
         if (bookingDAO.insert(booking)) {
-            req.setAttribute("success", "Đặt lịch thành công! Vui lòng chờ gia sư xác nhận.");
+            session.setAttribute("success", "Đặt lịch thành công! Vui lòng chờ gia sư xác nhận.");
+            resp.sendRedirect(req.getContextPath() + "/dashboard");
         } else {
             req.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại!");
+            req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
         }
-
-        req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
     }
 }
