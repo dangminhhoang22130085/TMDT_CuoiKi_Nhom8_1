@@ -223,4 +223,24 @@ public class BookingDAO {
 
         return b;
     }
+
+    public int countStudentsByTutorId(String tutorId) {
+        int count = 0;
+        // Đã sửa "bookings" thành "booking" và chuyển status về chữ thường để khớp với DB
+        String query = "SELECT COUNT(DISTINCT student_id) FROM booking WHERE tutor_id = ? AND LOWER(status) = 'accepted'";
+
+        try (java.sql.Connection conn = DBConnection.getConnection();
+             java.sql.PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setString(1, tutorId);
+            try (java.sql.ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    count = rs.getInt(1);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi đếm học sinh: " + e.getMessage());
+        }
+        return count;
+    }
 }

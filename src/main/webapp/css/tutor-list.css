@@ -1,5 +1,5 @@
 /* ==========================================================================
-   KHAI BÁO BIẾN MÀU (FIX LỖI IDE BÁO ĐỎ)
+   KHAI BÁO BIẾN MÀU
    ========================================================================== */
 :root {
     --primary: #10b981;
@@ -106,6 +106,16 @@
     box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
 }
 
+.filter-group input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.filter-group input[type="number"]::-webkit-outer-spin-button,
+.filter-group input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
 .btn-block {
     width: 100%;
     margin-top: 0.25rem;
@@ -142,7 +152,6 @@
     gap: 1.5rem;
 }
 
-/* Thẻ Gia Sư (Tutor Card) */
 .tutor-list-card {
     display: flex;
     gap: 1.5rem;
@@ -151,8 +160,6 @@
     background: white;
     box-shadow: var(--shadow-sm);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-    /* FIX MÉO ẢNH: Đổi stretch thành flex-start để ảnh không bị kéo giãn theo cột chữ */
     align-items: flex-start;
 }
 
@@ -161,7 +168,6 @@
     box-shadow: var(--shadow-md);
 }
 
-/* Kích thước ảnh 160x160 - Fix cứng kích thước */
 .tutor-list-image {
     width: 160px;
     min-width: 160px;
@@ -180,7 +186,7 @@
 .tutor-list-image img {
     width: 100% !important;
     height: 100% !important;
-    object-fit: cover !important; /* Đảm bảo tự cắt cúp vuông vức */
+    object-fit: cover !important;
     object-position: center;
     display: block;
 }
@@ -198,7 +204,6 @@
     color: var(--gray-400);
 }
 
-/* FIX RỚT CHỮ: Đã khớp tên class với file JSP của bạn */
 .badge-verified-large {
     position: absolute;
     bottom: 0.5rem;
@@ -213,11 +218,10 @@
     align-items: center;
     gap: 0.25rem;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    white-space: nowrap; /* Cấm chữ rớt dòng */
+    white-space: nowrap;
     z-index: 2;
 }
 
-/* Nội dung thẻ Gia sư */
 .tutor-list-details {
     flex-grow: 1;
     display: flex;
@@ -267,6 +271,7 @@
     font-size: 0.85rem;
     margin: 0;
 }
+
 .meta-item i { color: var(--primary); }
 .meta-item strong { color: var(--dark-900); }
 
@@ -275,14 +280,13 @@
     font-size: 0.9rem;
     color: var(--dark-700);
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* Hiển thị tối đa 3 dòng */
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.5;
 }
 
-/* Hàng dưới cùng */
 .tutor-stats-large {
     display: flex;
     gap: 1.5rem;
@@ -302,6 +306,7 @@
 .tutor-actions {
     display: flex;
     gap: 0.75rem;
+    margin-top: 1rem;
 }
 
 .tutor-actions .btn {
@@ -309,7 +314,6 @@
     font-size: 0.85rem;
 }
 
-/* Trạng thái trống */
 .empty-state-large {
     text-align: center;
     padding: 4rem 2rem;
@@ -325,13 +329,193 @@
 }
 
 /* ==========================================================================
+   NÚT CÔNG TẮC & HIỆU ỨNG DROPDOWN LỚP HỌC
+   ========================================================================== */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f8fafc;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+}
+
+.toggle-text {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #cbd5e1;
+    transition: .3s ease-in-out;
+    border-radius: 22px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s ease-in-out;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background-color: #10b981;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(18px);
+}
+
+.course-list-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s ease-out;
+    width: 100%;
+}
+
+.course-list-wrapper.show {
+    grid-template-rows: 1fr;
+}
+
+.course-list-inner {
+    overflow: hidden;
+}
+
+.individual-course-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px 14px;
+    background: #f8fafc;
+    border-radius: 8px;
+    margin-top: 12px;
+    border: 1px solid #e2e8f0;
+    transition: background 0.2s ease;
+}
+
+.individual-course-toggle:hover {
+    background: #f1f5f9;
+}
+
+.courses-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #475569;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.chevron-icon {
+    color: #64748b;
+    font-size: 14px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.chevron-icon.rotate {
+    transform: rotate(180deg);
+    color: #10b981;
+}
+
+.courses-container {
+    margin-bottom: 1.25rem;
+}
+
+.courses-wrapper {
+    background-color: transparent;
+    padding: 12px 0 0 0;
+    margin-top: 0;
+}
+
+.course-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 8px;
+}
+
+.course-level {
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+
+.course-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.course-action {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.course-price {
+    color: #ef4444;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn-choose-course {
+    border: 1px solid #10b981;
+    color: #10b981;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-choose-course:hover {
+    background: #10b981;
+    color: white;
+}
+
+/* ==========================================================================
    RESPONSIVE
    ========================================================================== */
 @media (max-width: 980px) {
     .tutors-container {
         grid-template-columns: 1fr;
     }
-    .filters-sidebar { position: static; }
+    .filters-sidebar {
+        position: static;
+    }
     .tutor-list-card {
         flex-direction: column;
         align-items: center;

@@ -75,10 +75,10 @@ public class TutorDAO {
         List<Tutor> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
                 "SELECT t.*, " +
-                "(SELECT COUNT(DISTINCT rs.student_id) FROM course c JOIN registered_subjects rs ON c.id = rs.course_id WHERE c.tutor_id = t.id) as total_students, " +
-                "(SELECT COUNT(*) FROM course WHERE tutor_id = t.id) as total_courses, " +
-                "(SELECT COUNT(*) FROM review WHERE tutor_id = t.id) as total_reviews " +
-                "FROM tutor t JOIN account a ON t.account_id = a.id WHERE t.verified = 1 AND a.status = 'active'");
+                        "(SELECT COUNT(DISTINCT rs.student_id) FROM course c JOIN registered_subjects rs ON c.id = rs.course_id WHERE c.tutor_id = t.id) as total_students, " +
+                        "(SELECT COUNT(*) FROM course WHERE tutor_id = t.id) as total_courses, " +
+                        "(SELECT COUNT(*) FROM review WHERE tutor_id = t.id) as total_reviews " +
+                        "FROM tutor t JOIN account a ON t.account_id = a.id WHERE t.verified = 1 AND a.status = 'active'");
 
         List<Object> params = new ArrayList<>();
 
@@ -234,5 +234,70 @@ public class TutorDAO {
         t.setEvaluate(rs.getInt("evaluate"));
         t.setVerified(rs.getBoolean("verified"));
         return t;
+    }
+    public List<Tutor> searchAdvanced(String keyword, String subjectName, String level, Integer minPrice, Integer maxPrice, Integer minRating) {
+        List<Tutor> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+                "SELECT DISTINCT t.*, " +
+                        "(SELECT COUNT(DISTINCT rs.student_id) FROM course c2 JOIN registered_subjects rs ON c2.id = rs.course_id WHERE c2.tutor_id = t.id) as total_students, " +
+                        "(SELECT COUNT(*) FROM course c3 WHERE c3.tutor_id = t.id) as total_courses, " +
+                        "(SELECT COUNT(*) FROM review r WHERE r.tutor_id = t.id) as total_reviews " +
+                        "FROM tutor t " +
+                        "JOIN account a ON t.account_id = a.id " +
+                        "LEFT JOIN course c ON t.id = c.tutor_id " +
+                        "LEFT JOIN subject s ON c.subject_id = s.id " +
+                        "WHERE t.verified = 1 AND a.status = 'active'"
+        );
+
+        List<Object> params = new ArrayList<>();
+
+        // 1. Tìm theo tên gia sư HOẶC tên môn học khóa học HOẶC chuyên ngành
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND (t.name ILIKE ? OR s.name ILIKE ? OR t.specialization ILIKE ?)");
+            String kw = "%" + keyword.trim() + "%";
+            params.add(kw); params.add(kw); params.add(kw);
+        }
+        // 2. Tìm theo chuyên ngành / môn học lọc
+        if (subjectName != null && !subjectName.trim().isEmpty()) {
+            sql.append(" AND (s.name ILIKE ? OR t.specialization ILIKE ?)");
+            String kw = "%" + subjectName.trim() + "%";
+            params.add(kw); params.add(kw);
+        }
+        if (level != null && !level.trim().isEmpty()) {
+            sql.append(" AND s.level ILIKE ?");
+            params.add("%" + level.trim() + "%");
+        }
+        if (minPrice != null) {
+            sql.append(" AND s.fee >= ?");
+            params.add(minPrice);
+        }
+        if (maxPrice != null) {
+            sql.append(" AND s.fee <= ?");
+            params.add(maxPrice);
+        }
+        if (minRating != null && minRating > 0) {
+            sql.append(" AND t.evaluate >= ?");
+            params.add(minRating);
+        }
+
+        sql.append(" ORDER BY t.evaluate DESC");
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                Object param = params.get(i);
+                if (param instanceof String) ps.setString(i + 1, (String) param);
+                else if (param instanceof Integer) ps.setInt(i + 1, (Integer) param);
+            }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Tutor t = mapRow(rs);
+                t.setTotalStudents(rs.getInt("total_students"));
+                t.setTotalCourses(rs.getInt("total_courses"));
+                t.setTotalReviews(rs.getInt("total_reviews"));
+                list.add(t);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return list;
     }
 }

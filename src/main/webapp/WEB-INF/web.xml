@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="
          http://java.sun.com/xml/ns/javaee
@@ -58,7 +58,7 @@
 
     <!-- Welcome file -->
     <welcome-file-list>
-        <welcome-file>jsp/home/index.jsp</welcome-file>
+        <welcome-file>home</welcome-file>
     </welcome-file-list>
 
     <!-- Error pages -->

@@ -7,8 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TutorHub - Nền Tảng Tìm Gia Sư Hàng Đầu</title>
-   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/home.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css?v=2">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/home.css?v=2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -120,77 +120,76 @@
 
         <!-- Popular Tutors Section -->
         <section class="popular-tutors">
-            <div class="section-header">
-                <h2>Gia Sư Nổi Bật</h2>
-                <p>Những gia sư được yêu thích nhất trên nền tảng</p>
+            <div class="slider-header-top">
+                <div>
+                    <h2 class="slider-title">
+                        <i class="fas fa-award"></i> Gia Sư Nổi Bật
+                    </h2>
+                    <p class="slider-subtitle">Những người hướng dẫn được học viên tin tưởng nhất</p>
+                </div>
+                <div class="slider-controls">
+                    <button id="prevBtn" type="button"><i class="fas fa-chevron-left"></i></button>
+                    <button id="nextBtn" type="button"><i class="fas fa-chevron-right"></i></button>
+                </div>
             </div>
+            <div class="slider-container" id="sliderContainer" style="overflow: hidden; width: 100%;">
+                <div class="slider-track" id="sliderTrack">
+                    <c:choose>
+                        <c:when test="${not empty requestScope.tutors}">
+                            <c:forEach var="tutor" items="${requestScope.tutors}">
+                                <div class="slider-card" onclick="window.location.href='<c:url value="/tutor-detail?id=${tutor.id}"/>'">
+                                    <div class="card-image-wrapper">
+                                        <c:choose>
+                                            <c:when test="${not empty tutor.avatar}">
+                                                <img src="${pageContext.request.contextPath}/images/tutors/${tutor.avatar}" alt="${tutor.name}">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${tutor.name}&backgroundColor=e2e8f0" alt="Avatar">
+                                            </c:otherwise>
+                                        </c:choose>
 
-            <div class="tutors-grid">
-                <c:choose>
-                    <c:when test="${not empty requestScope.tutors}">
-                        <c:forEach var="tutor" items="${requestScope.tutors}" begin="0" end="5">
-                            <div class="tutor-card">
-                                <div class="tutor-image">
-                                    <c:choose>
-                                        <c:when test="${not empty tutor.avatar}">
-                                            <img src="${tutor.avatar}" alt="${tutor.name}">
-                                        </c:when>
-                                        <c:otherwise>
-                                            <div class="avatar-placeholder">
-                                                <i class="fas fa-user"></i>
-                                            </div>
-                                        </c:otherwise>
-                                    </c:choose>
-                                    <c:if test="${tutor.verified}">
-                                        <span class="badge-verified">
-                                            <i class="fas fa-check-circle"></i>
-                                        </span>
-                                    </c:if>
-                                </div>
+                                        <div class="image-overlay"></div>
 
-                                <div class="tutor-info">
-                                    <div class="tutor-header">
-                                        <h3>${tutor.name}</h3>
-                                        <div class="tutor-rating">
-                                            <c:forEach begin="1" end="${tutor.evaluate}">
-                                                <i class="fas fa-star"></i>
-                                            </c:forEach>
-                                            <span>(${tutor.totalReviews})</span>
+                                        <div class="rating-badge">
+                                            <i class="fas fa-star"></i> ${tutor.evaluate}.0
+                                        </div>
+                                        <div class="subject-badge">
+                                                ${not empty tutor.specialization ? tutor.specialization : 'Gia Sư'}
                                         </div>
                                     </div>
 
-                                    <p class="tutor-specialization">
-                                        <i class="fas fa-book"></i>
-                                        ${tutor.specialization}
-                                    </p>
+                                    <div class="card-info">
+                                        <h3>
+                                                ${tutor.name}
+                                            <c:if test="${tutor.verified}">
+                                                <i class="fas fa-check-circle verified-icon" title="Đã xác minh"></i>
+                                            </c:if>
+                                        </h3>
 
-                                    <p class="tutor-description">${tutor.description}</p>
+                                        <div class="tutor-mini-meta">
+                                            <p><i class="fas fa-graduation-cap"></i> Gia sư chuyên nghiệp</p>
+                                            <p><i class="fas fa-map-marker-alt"></i> ${not empty tutor.address ? tutor.address : 'Toàn quốc'}</p>
+                                        </div>
 
-                                    <div class="tutor-stats">
-                                        <span><i class="fas fa-users"></i> ${tutor.totalStudents} học sinh</span>
-                                        <span><i class="fas fa-graduation-cap"></i> ${tutor.totalCourses} lớp</span>
+                                        <p class="tutor-desc">
+                                                ${not empty tutor.description ? tutor.description : 'Gia sư tận tâm, chuyên nghiệp, hỗ trợ học viên đạt mục tiêu học tập.'}
+                                        </p>
+
+                                        <div class="card-footer">
+                                            <span class="detail-link">Xem thông tin chi tiết <i class="fas fa-arrow-right"></i></span>
+                                        </div>
                                     </div>
-
-                                    <a href="<c:url value='/tutor-detail?id=${tutor.id}'/>" class="btn btn-outline btn-sm">
-                                        Xem Chi Tiết
-                                    </a>
                                 </div>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="empty-state" style="width:100%; text-align:center; padding: 2rem;">
+                                <i class="fas fa-user-graduate" style="font-size:3rem; color:#cbd5e1; margin-bottom:1rem;"></i>
+                                <p>Chưa có gia sư nổi bật. Hãy quay lại sau!</p>
                             </div>
-                        </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="empty-state">
-                            <i class="fas fa-user-graduate"></i>
-                            <p>Chưa có gia sư. Hãy quay lại sau!</p>
-                        </div>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-
-            <div class="section-footer">
-                <a href="<c:url value='/tutors'/>" class="btn btn-primary btn-lg">
-                    Xem Tất Cả Gia Sư
-                </a>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
             </div>
         </section>
 
@@ -207,6 +206,6 @@
     </main>
 
     <jsp:include page="/layout/footer.jsp"/>
-    <script src="<c:url value='/js/main.js'/>"></script>
+    <script src="<c:url value='/js/main.js'/>?v=2"></script>
 </body>
 </html>
