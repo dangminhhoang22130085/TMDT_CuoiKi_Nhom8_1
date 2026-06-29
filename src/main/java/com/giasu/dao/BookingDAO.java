@@ -66,31 +66,27 @@ public class BookingDAO {
     }
 
     public List<Booking> findAll() {
-
         List<Booking> list = new ArrayList<>();
-
         String sql =
                 "SELECT b.*, " +
                         "t.name AS t_name, " +
                         "t.specialization AS t_spec, " +
-                        "s.name AS st_name " +
+                        "s.name AS st_name, " +
+                        "c.status AS c_status " +
                         "FROM booking b " +
                         "LEFT JOIN tutor t ON b.tutor_id = t.id " +
                         "LEFT JOIN student s ON b.student_id = s.id " +
+                        "LEFT JOIN course c ON b.course_id = c.id " +
                         "ORDER BY b.created_at DESC";
-
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-
             while (rs.next()) {
                 list.add(mapRowFull(rs));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return list;
     }
 
@@ -157,68 +153,61 @@ public class BookingDAO {
     }
 
     private List<Booking> findByField(String field, String value) {
-
         List<Booking> list = new ArrayList<>();
-
         String sql =
                 "SELECT b.*, " +
                         "t.name AS t_name, " +
                         "t.specialization AS t_spec, " +
-                        "s.name AS st_name " +
+                        "s.name AS st_name, " +
+                        "c.status AS c_status " +
                         "FROM booking b " +
                         "LEFT JOIN tutor t ON b.tutor_id = t.id " +
                         "LEFT JOIN student s ON b.student_id = s.id " +
+                        "LEFT JOIN course c ON b.course_id = c.id " +
                         "WHERE " + field + " = ? " +
                         "ORDER BY b.created_at DESC";
-
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
             ps.setString(1, value.trim());
-
             ResultSet rs = ps.executeQuery();
-
             while (rs.next()) {
                 list.add(mapRowFull(rs));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return list;
     }
 
     private Booking mapRowFull(ResultSet rs) throws SQLException {
-
         Booking b = new Booking();
-
         b.setId(rs.getString("id").trim());
         b.setCourseId(rs.getString("course_id").trim());
         b.setTutorId(rs.getString("tutor_id").trim());
         b.setStudentId(rs.getString("student_id").trim());
-
         b.setBookingTime(rs.getTimestamp("booking_time"));
-
         String status = rs.getString("status");
         b.setStatus(status == null ? "" : status.trim());
-
         b.setNote(rs.getString("note"));
         b.setCreatedAt(rs.getTimestamp("created_at"));
 
-        Tutor t = new Tutor();
+        // Course status (may be null if no JOIN or course not found)
+        try {
+            String cStatus = rs.getString("c_status");
+            b.setCourseStatus(cStatus == null ? "" : cStatus.trim());
+        } catch (SQLException ignored) {
+            b.setCourseStatus("");
+        }
 
+        Tutor t = new Tutor();
         t.setId(rs.getString("tutor_id").trim());
         t.setName(rs.getString("t_name"));
         t.setSpecialization(rs.getString("t_spec"));
-
         b.setTutor(t);
 
         Student s = new Student();
-
         s.setId(rs.getString("student_id").trim());
         s.setName(rs.getString("st_name"));
-
         b.setStudent(s);
 
         return b;

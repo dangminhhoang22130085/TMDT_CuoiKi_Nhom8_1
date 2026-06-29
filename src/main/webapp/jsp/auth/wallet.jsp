@@ -1,12 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vi Dien Tu - TutorHub</title>
+    <title>Ví Điện Tử - TutorHub</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -31,8 +32,10 @@
             color: var(--text);
             min-height: 100vh;
         }
+
+        /* -------- NAVBAR -------- */
         .navbar {
-            background: rgba(26,26,46,0.95);
+            background: rgba(26,26,46,0.97);
             backdrop-filter: blur(20px);
             padding: 1rem 2rem;
             display: flex;
@@ -45,53 +48,151 @@
         }
         .brand { font-size: 1.4rem; font-weight: 800; color: var(--primary-light); text-decoration: none; }
         .nav-links { display: flex; gap: 1.5rem; align-items: center; }
-        .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
-        .nav-links a:hover { color: var(--text); }
-        .nav-links a.active { color: var(--primary-light); }
+        .nav-links a {
+            color: var(--muted); text-decoration: none; font-size: 0.9rem;
+            transition: color 0.2s; padding: 0.4rem 0.8rem; border-radius: 8px;
+        }
+        .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+        .nav-links a.active { color: var(--primary-light); background: rgba(108,99,255,0.1); }
+        .nav-user { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+        .nav-user .avatar {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem; font-weight: 700; color: #fff;
+        }
+
+        /* -------- LAYOUT -------- */
         .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+        /* -------- PAGE HEADER -------- */
         .page-header {
             margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+            display: flex; align-items: center; gap: 1rem;
+        }
+        .page-header .icon-wrap {
+            width: 52px; height: 52px; border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
         }
         .page-header h1 { font-size: 1.8rem; font-weight: 700; }
-        .page-header .icon { font-size: 2rem; }
-        /* Balance Card */
+        .page-header p { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
+
+        /* -------- ALERTS -------- */
+        .alert {
+            padding: 1rem 1.2rem; border-radius: 12px; margin-bottom: 1.5rem;
+            font-size: 0.92rem; display: flex; align-items: flex-start; gap: 0.75rem;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .alert i { margin-top: 0.1rem; flex-shrink: 0; font-size: 1rem; }
+        .alert-success {
+            background: rgba(0,184,148,0.12);
+            border: 1px solid rgba(0,184,148,0.35);
+            color: #00d2a8;
+        }
+        .alert-error {
+            background: rgba(225,112,85,0.12);
+            border: 1px solid rgba(225,112,85,0.35);
+            color: #ff7675;
+        }
+
+        /* -------- BALANCE CARD -------- */
         .balance-card {
             background: linear-gradient(135deg, #6c63ff 0%, #a29bfe 50%, #74b9ff 100%);
-            border-radius: 20px;
+            border-radius: 22px;
             padding: 2.5rem;
             margin-bottom: 2rem;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 20px 60px rgba(108,99,255,0.35);
         }
         .balance-card::before {
             content: '';
             position: absolute;
-            top: -60px; right: -60px;
-            width: 200px; height: 200px;
-            background: rgba(255,255,255,0.1);
+            top: -70px; right: -70px;
+            width: 220px; height: 220px;
+            background: rgba(255,255,255,0.08);
             border-radius: 50%;
         }
-        .balance-label { font-size: 0.9rem; opacity: 0.85; margin-bottom: 0.5rem; letter-spacing: 0.05em; text-transform: uppercase; }
-        .balance-amount { font-size: 2.8rem; font-weight: 800; letter-spacing: -1px; }
-        .balance-actions { margin-top: 1.8rem; display: flex; gap: 1rem; }
-        /* Form Panel */
-        .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+        .balance-card::after {
+            content: '';
+            position: absolute;
+            bottom: -40px; left: 40%;
+            width: 150px; height: 150px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+        .balance-card-inner { position: relative; z-index: 1; }
+        .balance-label {
+            font-size: 0.82rem; opacity: 0.8;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            margin-bottom: 0.6rem;
+        }
+        .balance-amount {
+            font-size: 3rem; font-weight: 800;
+            letter-spacing: -1.5px; margin-bottom: 0.25rem;
+        }
+        .balance-unit { font-size: 1.1rem; font-weight: 500; opacity: 0.75; }
+        .balance-actions {
+            margin-top: 2rem; display: flex; gap: 0.75rem; flex-wrap: wrap;
+        }
+        .btn-glass {
+            background: rgba(255,255,255,0.18);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 0.65rem 1.4rem;
+            border-radius: 10px;
+            font-size: 0.88rem; font-weight: 600;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem;
+            transition: all 0.2s; text-decoration: none;
+            backdrop-filter: blur(10px);
+        }
+        .btn-glass:hover { background: rgba(255,255,255,0.28); transform: translateY(-1px); }
+
+        /* -------- GRID -------- */
+        .panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
         @media (max-width: 700px) { .panels { grid-template-columns: 1fr; } }
+
+        /* -------- PANEL -------- */
         .panel {
             background: var(--card-bg);
-            border-radius: 16px;
+            border-radius: 18px;
             border: 1px solid var(--border);
             padding: 1.8rem;
+            transition: border-color 0.2s;
         }
-        .panel h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 1.2rem; display: flex; align-items: center; gap: 0.6rem; }
-        .panel h3 .icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .panel:hover { border-color: rgba(255,255,255,0.15); }
+        .panel-header {
+            display: flex; align-items: center; gap: 0.75rem;
+            margin-bottom: 1.2rem;
+        }
+        .panel-icon {
+            width: 38px; height: 38px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem;
+        }
         .deposit-icon { background: rgba(0,184,148,0.15); color: var(--success); }
         .withdraw-icon { background: rgba(253,203,110,0.15); color: var(--warning); }
+        .info-icon { background: rgba(116,185,255,0.15); color: var(--info); }
+        .panel-title { font-size: 1rem; font-weight: 600; }
+        .panel-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.2rem; line-height: 1.5; }
+
+        /* -------- FORM -------- */
         .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; }
+        .form-group label {
+            display: block; font-size: 0.82rem;
+            color: var(--muted); margin-bottom: 0.4rem; font-weight: 500;
+        }
         .form-group input {
             width: 100%;
             background: var(--surface);
@@ -101,224 +202,372 @@
             color: var(--text);
             font-size: 1rem;
             font-family: inherit;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .form-group input:focus { outline: none; border-color: var(--primary); }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108,99,255,0.15);
+        }
+        .quick-amounts {
+            display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1rem;
+        }
+        .quick-btn {
+            background: var(--surface); color: var(--muted);
+            border: 1px solid var(--border);
+            padding: 0.35rem 0.75rem; border-radius: 8px;
+            font-size: 0.78rem; font-weight: 600;
+            cursor: pointer; transition: all 0.15s; font-family: inherit;
+        }
+        .quick-btn:hover { border-color: var(--primary); color: var(--primary-light); }
         .btn {
             display: inline-flex; align-items: center; gap: 0.5rem;
             padding: 0.75rem 1.5rem; border-radius: 10px;
             border: none; cursor: pointer; font-size: 0.9rem; font-weight: 600;
-            font-family: inherit; transition: all 0.2s;
+            font-family: inherit; transition: all 0.2s; text-decoration: none;
         }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
         .btn-success { background: var(--success); color: #fff; }
-        .btn-success:hover { background: #00a381; transform: translateY(-1px); }
+        .btn-success:hover:not(:disabled) { background: #00a381; transform: translateY(-1px); box-shadow: 0 4px 15px rgba(0,184,148,0.3); }
         .btn-warning { background: var(--warning); color: #1a1a2e; }
-        .btn-warning:hover { filter: brightness(0.9); transform: translateY(-1px); }
-        .btn-outline { background: transparent; color: var(--primary-light); border: 1px solid var(--primary); }
-        .btn-outline:hover { background: var(--primary); color: #fff; }
-        /* Alert */
-        .alert {
-            padding: 1rem 1.2rem; border-radius: 10px; margin-bottom: 1.5rem;
-            font-size: 0.9rem; display: flex; align-items: center; gap: 0.6rem;
+        .btn-warning:hover:not(:disabled) { filter: brightness(0.92); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(253,203,110,0.3); }
+        .info-box {
+            background: rgba(116,185,255,0.07);
+            border: 1px solid rgba(116,185,255,0.2);
+            border-radius: 8px; padding: 0.8rem 1rem;
+            font-size: 0.82rem; color: var(--muted);
+            margin-bottom: 1rem; line-height: 1.6;
         }
-        .alert-success { background: rgba(0,184,148,0.12); border: 1px solid rgba(0,184,148,0.3); color: var(--success); }
-        .alert-error   { background: rgba(225,112,85,0.12);  border: 1px solid rgba(225,112,85,0.3);  color: var(--danger);  }
-        /* Transactions Table */
-        .section-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: var(--text); }
-        .tx-table-wrap { background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; }
+
+        /* -------- TRANSACTION TABLE -------- */
+        .section-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        .section-title {
+            font-size: 1.05rem; font-weight: 600; color: var(--text);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .tx-count {
+            background: rgba(108,99,255,0.15); color: var(--primary-light);
+            padding: 0.2em 0.6em; border-radius: 20px; font-size: 0.78rem; font-weight: 600;
+        }
+        .tx-table-wrap {
+            background: var(--card-bg);
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
         .tx-table { width: 100%; border-collapse: collapse; }
-        .tx-table thead th { background: var(--surface); padding: 0.9rem 1.2rem; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); text-align: left; }
-        .tx-table tbody td { padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
-        .tx-table tbody tr:last-child td { border-bottom: none; }
-        .tx-table tbody tr:hover { background: rgba(255,255,255,0.03); }
-        .badge {
-            display: inline-block; padding: 0.25em 0.65em; border-radius: 6px;
-            font-size: 0.75rem; font-weight: 600; letter-spacing: 0.02em;
+        .tx-table thead th {
+            background: var(--surface);
+            padding: 0.9rem 1.2rem;
+            font-size: 0.75rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.06em;
+            color: var(--muted); text-align: left;
         }
-        .badge-deposit  { background: rgba(0,184,148,0.15);  color: var(--success); }
+        .tx-table tbody td {
+            padding: 0.9rem 1.2rem;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.87rem;
+            vertical-align: middle;
+        }
+        .tx-table tbody tr:last-child td { border-bottom: none; }
+        .tx-table tbody tr:hover { background: rgba(255,255,255,0.025); }
+        .badge {
+            display: inline-block; padding: 0.28em 0.7em; border-radius: 6px;
+            font-size: 0.74rem; font-weight: 600; letter-spacing: 0.02em;
+        }
+        .badge-deposit  { background: rgba(0,184,148,0.15);  color: #00d2a8; }
         .badge-withdraw { background: rgba(253,203,110,0.15); color: var(--warning); }
-        .badge-payment  { background: rgba(108,99,255,0.15); color: var(--primary-light); }
-        .amount-positive { color: var(--success); font-weight: 600; }
-        .amount-negative { color: var(--danger);  font-weight: 600; }
-        .empty-state { text-align: center; padding: 3rem; color: var(--muted); }
-        .empty-state i { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.4; }
+        .badge-payment  { background: rgba(108,99,255,0.15);  color: var(--primary-light); }
+        .badge-ok       { background: rgba(0,184,148,0.12);   color: #00d2a8; }
+        .badge-fail     { background: rgba(225,112,85,0.12);   color: #ff7675; }
+        .amount-in  { color: #00d2a8; font-weight: 600; }
+        .amount-out { color: #ff7675; font-weight: 600; }
+        .code-id { color: var(--primary-light); font-family: monospace; font-size: 0.82rem; }
+        .empty-state {
+            text-align: center; padding: 4rem 2rem; color: var(--muted);
+        }
+        .empty-state .empty-icon {
+            font-size: 3rem; margin-bottom: 1rem; opacity: 0.25;
+        }
+        .empty-state p { font-size: 0.95rem; }
+        .empty-state .sub { font-size: 0.82rem; margin-top: 0.4rem; opacity: 0.7; }
     </style>
 </head>
 <body>
+
+<!-- ===== NAVBAR ===== -->
 <nav class="navbar">
     <a class="brand" href="${pageContext.request.contextPath}/">TutorHub</a>
     <div class="nav-links">
         <a href="${pageContext.request.contextPath}/dashboard">Dashboard</a>
-        <a href="${pageContext.request.contextPath}/wallet" class="active">Vi Tien</a>
-        <a href="${pageContext.request.contextPath}/logout">Dang Xuat</a>
+        <a href="${pageContext.request.contextPath}/tutors">Gia Sư</a>
+        <a href="${pageContext.request.contextPath}/wallet" class="active">Ví Tiền</a>
+    </div>
+    <div class="nav-user">
+        <div class="avatar">
+            <c:choose>
+                <c:when test="${not empty sessionScope.userProfile.name}">
+                    ${fn:substring(sessionScope.userProfile.name, 0, 1)}
+                </c:when>
+                <c:otherwise>U</c:otherwise>
+            </c:choose>
+        </div>
+        <span style="color:var(--muted);font-size:0.88rem">${sessionScope.userProfile.name}</span>
+        <a href="${pageContext.request.contextPath}/logout"
+           style="color:var(--danger);font-size:0.85rem;margin-left:0.5rem;text-decoration:none">
+            <i class="fas fa-sign-out-alt"></i>
+        </a>
     </div>
 </nav>
 
+<!-- ===== CONTAINER ===== -->
 <div class="container">
+
+    <!-- PAGE HEADER -->
     <div class="page-header">
-        <span class="icon">💳</span>
-        <h1>Vi Dien Tu</h1>
-    </div>
-
-    <c:if test="${not empty success}">
-        <div class="alert alert-success"><i class="fas fa-check-circle"></i> ${success}</div>
-    </c:if>
-    <c:if test="${not empty error}">
-        <div class="alert alert-error"><i class="fas fa-exclamation-circle"></i> ${error}</div>
-    </c:if>
-
-    <!-- Balance Card -->
-    <div class="balance-card">
-        <div class="balance-label">So Du Hien Tai</div>
-        <div class="balance-amount">${balance} VND</div>
-        <div class="balance-actions">
-            <c:if test="${sessionScope.account.role == 1}">
-                <a href="${pageContext.request.contextPath}/wallet" class="btn btn-outline" style="background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.3)">
-                    <i class="fas fa-plus"></i> Nap Tien
-                </a>
-            </c:if>
-            <c:if test="${sessionScope.account.role == 2}">
-                <a href="${pageContext.request.contextPath}/wallet" class="btn btn-outline" style="background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.3)">
-                    <i class="fas fa-arrow-down"></i> Rut Tien
-                </a>
-            </c:if>
-            <a href="${pageContext.request.contextPath}/dashboard" class="btn btn-outline" style="background:rgba(255,255,255,0.1);color:#fff;border-color:rgba(255,255,255,0.2)">
-                <i class="fas fa-arrow-left"></i> Dashboard
-            </a>
+        <div class="icon-wrap">💳</div>
+        <div>
+            <h1>Ví Điện Tử</h1>
+            <p>Quản lý số dư và lịch sử giao dịch của bạn</p>
         </div>
     </div>
 
-    <!-- Action Panels -->
+    <!-- ALERTS -->
+    <c:if test="${not empty success}">
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span>${success}</span>
+        </div>
+    </c:if>
+    <c:if test="${not empty error}">
+        <div class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>${error}</span>
+        </div>
+    </c:if>
+
+    <!-- BALANCE CARD -->
+    <div class="balance-card">
+        <div class="balance-card-inner">
+            <div class="balance-label">
+                <i class="fas fa-wallet" style="margin-right:0.4rem"></i>Số Dư Hiện Tại
+            </div>
+            <div class="balance-amount">
+                <fmt:formatNumber value="${balance}" pattern="#,##0"/>
+                <span class="balance-unit">VND</span>
+            </div>
+            <div class="balance-actions">
+                <c:if test="${sessionScope.account.role == 1}">
+                    <a href="#depositPanel" onclick="document.getElementById('depositAmount').focus()" class="btn-glass">
+                        <i class="fas fa-plus"></i> Nạp Tiền
+                    </a>
+                </c:if>
+                <c:if test="${sessionScope.account.role == 2}">
+                    <a href="#withdrawPanel" onclick="document.getElementById('withdrawAmount').focus()" class="btn-glass">
+                        <i class="fas fa-arrow-down"></i> Rút Tiền
+                    </a>
+                </c:if>
+                <a href="${pageContext.request.contextPath}/dashboard" class="btn-glass">
+                    <i class="fas fa-th-large"></i> Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANELS -->
     <div class="panels">
-        <!-- Deposit (Student only) -->
+
+        <!-- DEPOSIT (Student only) -->
         <c:if test="${sessionScope.account.role == 1}">
-            <div class="panel">
-                <h3>
-                    <span class="icon deposit-icon"><i class="fas fa-plus"></i></span>
-                    Nap Tien Vao Vi
-                </h3>
-                <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1.2rem">
-                    Nap tien vao vi de thanh toan hoc phi cho gia su.
+            <div class="panel" id="depositPanel">
+                <div class="panel-header">
+                    <div class="panel-icon deposit-icon"><i class="fas fa-plus"></i></div>
+                    <div class="panel-title">Nạp Tiền Vào Ví</div>
+                </div>
+                <p class="panel-sub">
+                    Nạp tiền vào ví điện tử để thanh toán học phí cho gia sư.
+                    Giao dịch được ghi lại đầy đủ trong lịch sử.
                 </p>
                 <form action="${pageContext.request.contextPath}/wallet" method="post" id="depositForm">
                     <input type="hidden" name="action" value="deposit">
                     <div class="form-group">
-                        <label for="depositAmount">So Tien Nap (VND)</label>
-                        <input type="number" id="depositAmount" name="amount" min="10000" step="10000"
-                               placeholder="Vi du: 500000" required>
+                        <label for="depositAmount">Số Tiền Nạp (VND)</label>
+                        <input type="number" id="depositAmount" name="amount"
+                               min="10000" step="10000" max="100000000"
+                               placeholder="Ví dụ: 500,000" required>
                     </div>
-                    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem">
-                        <button type="button" class="btn btn-outline" style="padding:0.4rem 0.8rem;font-size:0.8rem" onclick="document.getElementById('depositAmount').value='100000'">100K</button>
-                        <button type="button" class="btn btn-outline" style="padding:0.4rem 0.8rem;font-size:0.8rem" onclick="document.getElementById('depositAmount').value='500000'">500K</button>
-                        <button type="button" class="btn btn-outline" style="padding:0.4rem 0.8rem;font-size:0.8rem" onclick="document.getElementById('depositAmount').value='1000000'">1TR</button>
-                        <button type="button" class="btn btn-outline" style="padding:0.4rem 0.8rem;font-size:0.8rem" onclick="document.getElementById('depositAmount').value='2000000'">2TR</button>
+                    <div class="quick-amounts">
+                        <button type="button" class="quick-btn" onclick="setDeposit(100000)">100K</button>
+                        <button type="button" class="quick-btn" onclick="setDeposit(200000)">200K</button>
+                        <button type="button" class="quick-btn" onclick="setDeposit(500000)">500K</button>
+                        <button type="button" class="quick-btn" onclick="setDeposit(1000000)">1 Triệu</button>
+                        <button type="button" class="quick-btn" onclick="setDeposit(2000000)">2 Triệu</button>
+                        <button type="button" class="quick-btn" onclick="setDeposit(5000000)">5 Triệu</button>
                     </div>
-                    <button type="submit" class="btn btn-success" id="depositBtn">
-                        <i class="fas fa-check"></i> Xac Nhan Nap Tien
+                    <button type="submit" class="btn btn-success" id="depositBtn"
+                            onclick="return confirmDeposit()">
+                        <i class="fas fa-check"></i> Xác Nhận Nạp Tiền
                     </button>
                 </form>
             </div>
         </c:if>
 
-        <!-- Withdraw (Tutor only) -->
+        <!-- WITHDRAW (Tutor only) -->
         <c:if test="${sessionScope.account.role == 2}">
-            <div class="panel">
-                <h3>
-                    <span class="icon withdraw-icon"><i class="fas fa-arrow-down"></i></span>
-                    Rut Tien Ve Ngan Hang
-                </h3>
-                <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1.2rem">
-                    Rut so du tu viec day hoc ve tai khoan ngan hang.
+            <div class="panel" id="withdrawPanel">
+                <div class="panel-header">
+                    <div class="panel-icon withdraw-icon"><i class="fas fa-arrow-down"></i></div>
+                    <div class="panel-title">Rút Tiền Về Ngân Hàng</div>
+                </div>
+                <p class="panel-sub">
+                    Rút số dư từ việc dạy học về tài khoản ngân hàng của bạn.
                 </p>
+                <div class="info-box">
+                    <i class="fas fa-info-circle" style="color:var(--info);margin-right:0.4rem"></i>
+                    Tối thiểu rút: <strong>50,000 VND</strong>. Số dư sau rút phải ≥ 0.
+                    Số dư hiện tại: <strong><fmt:formatNumber value="${balance}" pattern="#,##0"/> VND</strong>.
+                </div>
                 <form action="${pageContext.request.contextPath}/wallet" method="post" id="withdrawForm">
                     <input type="hidden" name="action" value="withdraw">
                     <div class="form-group">
-                        <label for="withdrawAmount">So Tien Rut (VND)</label>
-                        <input type="number" id="withdrawAmount" name="amount" min="50000" step="10000"
-                               placeholder="Vi du: 500000" required>
+                        <label for="withdrawAmount">Số Tiền Rút (VND)</label>
+                        <input type="number" id="withdrawAmount" name="amount"
+                               min="50000" step="10000" max="${balance}"
+                               placeholder="Ví dụ: 500,000" required>
                     </div>
-                    <div style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;padding:0.8rem;background:var(--surface);border-radius:8px">
-                        <i class="fas fa-info-circle" style="color:var(--info)"></i>
-                        Toi thieu rut: 50,000 VND. So du con lai phai >= 0.
+                    <div class="quick-amounts">
+                        <button type="button" class="quick-btn" onclick="setWithdraw(100000)">100K</button>
+                        <button type="button" class="quick-btn" onclick="setWithdraw(500000)">500K</button>
+                        <button type="button" class="quick-btn" onclick="setWithdraw(1000000)">1 Triệu</button>
+                        <button type="button" class="quick-btn" onclick="setWithdraw(${balance})">Toàn bộ</button>
                     </div>
-                    <button type="submit" class="btn btn-warning" id="withdrawBtn">
-                        <i class="fas fa-arrow-down"></i> Xac Nhan Rut Tien
+                    <button type="submit" class="btn btn-warning" id="withdrawBtn"
+                            onclick="return confirmWithdraw()">
+                        <i class="fas fa-arrow-down"></i> Xác Nhận Rút Tiền
                     </button>
                 </form>
             </div>
         </c:if>
 
-        <!-- Info card -->
+        <!-- INFO PANEL -->
         <div class="panel">
-            <h3><span class="icon" style="background:rgba(116,185,255,0.15);color:var(--info)"><i class="fas fa-info"></i></span> Huong Dan</h3>
-            <ul style="font-size:0.85rem;color:var(--muted);line-height:2;padding-left:1.2rem">
+            <div class="panel-header">
+                <div class="panel-icon info-icon"><i class="fas fa-shield-alt"></i></div>
+                <div class="panel-title">Hướng Dẫn & Bảo Mật</div>
+            </div>
+            <ul style="font-size:0.85rem;color:var(--muted);line-height:2.2;padding-left:1.2rem">
                 <c:if test="${sessionScope.account.role == 1}">
-                    <li>Nap tien truoc, sau do thanh toan hoc phi tu Dashboard</li>
-                    <li>So du duoc bao mat va ma hoa an toan</li>
-                    <li>Moi giao dich deu duoc ghi lai lich su</li>
+                    <li>Nạp tiền vào ví trước khi đặt lịch học</li>
+                    <li>Thanh toán học phí từ trang Dashboard</li>
+                    <li>Mỗi giao dịch đều được ghi lại đầy đủ</li>
+                    <li>Số dư được bảo mật và mã hóa an toàn</li>
                 </c:if>
                 <c:if test="${sessionScope.account.role == 2}">
-                    <li>Nhan tien khi hoc sinh thanh toan hoc phi</li>
-                    <li>Co the rut tien bat cu luc nao ve ngan hang</li>
-                    <li>So du hien thi la so du kha dung</li>
+                    <li>Nhận tiền khi học sinh thanh toán học phí</li>
+                    <li>Có thể rút tiền bất cứ lúc nào về ngân hàng</li>
+                    <li>Tối thiểu rút 50,000 VND mỗi lần</li>
+                    <li>Số dư hiển thị là số dư khả dụng</li>
+                </c:if>
+                <c:if test="${sessionScope.account.role == 3}">
+                    <li>Xem toàn bộ giao dịch của hệ thống</li>
                 </c:if>
             </ul>
         </div>
     </div>
 
-    <!-- Transaction History -->
-    <div class="section-title"><i class="fas fa-history" style="color:var(--primary-light);margin-right:0.5rem"></i> Lich Su Giao Dich</div>
+    <!-- TRANSACTION HISTORY -->
+    <div class="section-header">
+        <div class="section-title">
+            <i class="fas fa-history" style="color:var(--primary-light)"></i>
+            Lịch Sử Giao Dịch
+            <c:if test="${not empty transactions}">
+                <span class="tx-count">${transactions.size()}</span>
+            </c:if>
+        </div>
+    </div>
+
     <div class="tx-table-wrap">
         <c:choose>
             <c:when test="${not empty transactions}">
                 <table class="tx-table">
                     <thead>
                         <tr>
-                            <th>Ma GD</th>
-                            <th>Loai</th>
-                            <th>So Tien</th>
-                            <th>Phuong Thuc</th>
-                            <th>Trang Thai</th>
-                            <th>Thoi Gian</th>
+                            <th>Mã GD</th>
+                            <th>Loại</th>
+                            <th>Số Tiền</th>
+                            <th>Phương Thức</th>
+                            <th>Trạng Thái</th>
+                            <th>Thời Gian</th>
                         </tr>
                     </thead>
                     <tbody>
                         <c:forEach var="tx" items="${transactions}">
                             <tr>
-                                <td><code style="color:var(--primary-light)">${tx.id}</code></td>
+                                <td><span class="code-id">${tx.id}</span></td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${tx.paymentType == 'DEPOSIT'}">
-                                            <span class="badge badge-deposit">Nap Tien</span>
+                                            <span class="badge badge-deposit">
+                                                <i class="fas fa-plus" style="font-size:0.65rem"></i> Nạp Tiền
+                                            </span>
                                         </c:when>
                                         <c:when test="${tx.paymentType == 'WITHDRAW'}">
-                                            <span class="badge badge-withdraw">Rut Tien</span>
+                                            <span class="badge badge-withdraw">
+                                                <i class="fas fa-arrow-down" style="font-size:0.65rem"></i> Rút Tiền
+                                            </span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="badge badge-payment">Thanh Toan HP</span>
+                                            <span class="badge badge-payment">
+                                                <i class="fas fa-graduation-cap" style="font-size:0.65rem"></i> Học Phí
+                                            </span>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${tx.paymentType == 'DEPOSIT'}">
-                                            <span class="amount-positive">+<fmt:formatNumber value="${tx.amount}" pattern="#,##0"/> VND</span>
+                                            <span class="amount-in">
+                                                +<fmt:formatNumber value="${tx.amount}" pattern="#,##0"/> VND
+                                            </span>
                                         </c:when>
                                         <c:when test="${tx.paymentType == 'WITHDRAW'}">
-                                            <span class="amount-negative">-<fmt:formatNumber value="${tx.amount}" pattern="#,##0"/> VND</span>
+                                            <span class="amount-out">
+                                                -<fmt:formatNumber value="${tx.amount}" pattern="#,##0"/> VND
+                                            </span>
                                         </c:when>
                                         <c:when test="${sessionScope.account.role == 2}">
-                                            <span class="amount-positive">+<fmt:formatNumber value="${tx.amount}" pattern="#,##0"/> VND</span>
+                                            <%-- Tutor receives payment --%>
+                                            <span class="amount-in">
+                                                +<fmt:formatNumber value="${tx.amount}" pattern="#,##0"/> VND
+                                            </span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="amount-negative">-<fmt:formatNumber value="${tx.amount}" pattern="#,##0"/> VND</span>
+                                            <%-- Student pays --%>
+                                            <span class="amount-out">
+                                                -<fmt:formatNumber value="${tx.amount}" pattern="#,##0"/> VND
+                                            </span>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
-                                <td style="color:var(--muted)">${not empty tx.paymentMethod ? tx.paymentMethod : '-'}</td>
+                                <td style="color:var(--muted)">
+                                    <c:choose>
+                                        <c:when test="${tx.paymentMethod == 'bank_transfer'}">Chuyển Khoản</c:when>
+                                        <c:when test="${tx.paymentMethod == 'wallet'}">Ví Điện Tử</c:when>
+                                        <c:when test="${tx.paymentMethod == 'momo'}">MoMo</c:when>
+                                        <c:otherwise>${tx.paymentMethod}</c:otherwise>
+                                    </c:choose>
+                                </td>
                                 <td>
-                                    <span class="badge ${tx.status == 'completed' ? 'badge-deposit' : 'badge-withdraw'}">
-                                        ${tx.status == 'completed' ? 'Hoan Thanh' : tx.status}
+                                    <span class="badge ${tx.status == 'completed' ? 'badge-ok' : 'badge-fail'}">
+                                        <c:choose>
+                                            <c:when test="${tx.status == 'completed'}">Hoàn Thành</c:when>
+                                            <c:when test="${tx.status == 'pending'}">Đang Xử Lý</c:when>
+                                            <c:when test="${tx.status == 'failed'}">Thất Bại</c:when>
+                                            <c:otherwise>${tx.status}</c:otherwise>
+                                        </c:choose>
                                     </span>
                                 </td>
                                 <td style="color:var(--muted);font-size:0.82rem">
@@ -331,24 +580,81 @@
             </c:when>
             <c:otherwise>
                 <div class="empty-state">
-                    <i class="fas fa-receipt"></i>
-                    <p>Chua co giao dich nao.</p>
+                    <div class="empty-icon"><i class="fas fa-receipt"></i></div>
+                    <p>Chưa có giao dịch nào.</p>
                     <c:if test="${sessionScope.account.role == 1}">
-                        <p style="margin-top:0.5rem;font-size:0.85rem">Hay nap tien de bat dau!</p>
+                        <p class="sub">Hãy nạp tiền để bắt đầu sử dụng dịch vụ!</p>
+                    </c:if>
+                    <c:if test="${sessionScope.account.role == 2}">
+                        <p class="sub">Giao dịch sẽ xuất hiện khi học sinh thanh toán học phí cho bạn.</p>
                     </c:if>
                 </div>
             </c:otherwise>
         </c:choose>
     </div>
-</div>
+
+</div><!-- /container -->
 
 <script>
-    // Prevent double submission
-    document.querySelectorAll('form').forEach(form => {
-        form.addEventListener('submit', function() {
-            const btn = this.querySelector('button[type="submit"]');
-            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Dang xu ly...'; }
-        });
+    function setDeposit(val) {
+        document.getElementById('depositAmount').value = val;
+    }
+    function setWithdraw(val) {
+        document.getElementById('withdrawAmount').value = val;
+    }
+
+    function confirmDeposit() {
+        var amount = parseInt(document.getElementById('depositAmount').value || '0');
+        if (!amount || amount < 10000) {
+            alert('So tien nap toi thieu 10,000 VND.');
+            return false;
+        }
+        var formatted = amount.toLocaleString('vi-VN');
+        if (!confirm('Xac nhan nap ' + formatted + ' VND vao vi?')) return false;
+        var btn = document.getElementById('depositBtn');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Dang xu ly...';
+        btn.disabled = true;
+        document.getElementById('depositForm').submit();
+        return false;
+    }
+
+    function confirmWithdraw() {
+        var amount = parseInt(document.getElementById('withdrawAmount').value || '0');
+        var balance = ${empty balance ? 0 : balance};
+        if (!amount || amount < 50000) {
+            alert('So tien rut toi thieu 50,000 VND.');
+            return false;
+        }
+        if (amount > balance) {
+            alert('So tien rut vuot qua so du hien tai (' + balance.toLocaleString('vi-VN') + ' VND).');
+            return false;
+        }
+        var formatted = amount.toLocaleString('vi-VN');
+        if (!confirm('Xac nhan rut ' + formatted + ' VND ve ngan hang?')) return false;
+        var btn = document.getElementById('withdrawBtn');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Dang xu ly...';
+        btn.disabled = true;
+        document.getElementById('withdrawForm').submit();
+        return false;
+    }
+
+    // Fix bfcache: reset button states when user navigates back
+    window.addEventListener('pageshow', function() {
+        var depositBtn = document.getElementById('depositBtn');
+        if (depositBtn) {
+            depositBtn.disabled = false;
+            depositBtn.innerHTML = '<i class="fas fa-check"></i> Xac Nhan Nap Tien';
+        }
+        var withdrawBtn = document.getElementById('withdrawBtn');
+        if (withdrawBtn) {
+            withdrawBtn.disabled = false;
+            withdrawBtn.innerHTML = '<i class="fas fa-arrow-down"></i> Xac Nhan Rut Tien';
+        }
+    });
+
+    window.addEventListener('DOMContentLoaded', function() {
+        var alertEl = document.querySelector('.alert');
+        if (alertEl) alertEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
 </script>
 </body>

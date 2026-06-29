@@ -11,6 +11,7 @@ public class Booking {
     private String status;
     private String note;
     private Timestamp createdAt;
+    private String courseStatus; // status of the linked course (e.g. PAID)
 
     // Join fields
     private Tutor tutor;
@@ -42,6 +43,9 @@ public class Booking {
 
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+
+    public String getCourseStatus() { return courseStatus; }
+    public void setCourseStatus(String courseStatus) { this.courseStatus = courseStatus; }
 
     public Tutor getTutor() { return tutor; }
     public void setTutor(Tutor tutor) { this.tutor = tutor; }

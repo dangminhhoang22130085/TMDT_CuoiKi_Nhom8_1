@@ -20,14 +20,20 @@ public class BookingServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
 
         String action = req.getParameter("action");
+<<<<<<< Updated upstream
+=======
         String courseId = req.getParameter("courseId");
-        String tutorId = req.getParameter("tutorId");
-        String id = req.getParameter("id");
-
         if (courseId != null) courseId = courseId.trim();
+        String tutorId = req.getParameter("tutorId");
         if (tutorId != null) tutorId = tutorId.trim();
+        String id = req.getParameter("id");
+>>>>>>> Stashed changes
 
         if ("confirm".equals(action) || "cancel".equals(action)) {
             String bookingId = req.getParameter("id");
@@ -63,23 +69,40 @@ public class BookingServlet extends HttpServlet {
             return;
         }
 
+<<<<<<< Updated upstream
+        // Show booking form
+        String courseId = req.getParameter("courseId");
+        String tutorId = req.getParameter("tutorId");
+
         if (tutorId != null) {
+=======
+        if (tutorId != null && !tutorId.isEmpty()) {
+>>>>>>> Stashed changes
             Tutor tutor = tutorDAO.findById(tutorId);
             List<Course> courses = courseDAO.findByTutorId(tutorId);
             req.setAttribute("tutor", tutor);
             req.setAttribute("courses", courses);
         }
-        if (courseId != null) {
+        if (courseId != null && !courseId.isEmpty()) {
             Course course = courseDAO.findById(courseId);
             req.setAttribute("selectedCourse", course);
         }
 
+<<<<<<< Updated upstream
+=======
+        if (action != null && id != null) {
+            if (action.equals("confirm")) {
+                bookingDAO.updateStatus(id, "confirmed");
+            } else if (action.equals("cancel")) {
+                bookingDAO.updateStatus(id, "rejected");
+            }
+            resp.sendRedirect(req.getContextPath() + "/dashboard");
+            return;
+        }
 
-// Thêm dòng này để kết thúc luồng hiển thị form đặt lịch
+>>>>>>> Stashed changes
         req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
     }
-
-
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -88,12 +111,14 @@ public class BookingServlet extends HttpServlet {
         Student student = (Student) session.getAttribute("userProfile");
 
         if (student == null) {
-            resp.sendRedirect(req.getContextPath() + "/jsp/auth/login.jsp");
+            resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
         String courseId = req.getParameter("courseId");
+        if (courseId != null) courseId = courseId.trim();
         String tutorId = req.getParameter("tutorId");
+        if (tutorId != null) tutorId = tutorId.trim();
         String bookingTimeStr = req.getParameter("bookingTime");
         String note = req.getParameter("note");
 
@@ -119,22 +144,18 @@ public class BookingServlet extends HttpServlet {
         } catch (Exception e) {
             booking.setBookingTime(new Timestamp(System.currentTimeMillis()));
         }
+<<<<<<< Updated upstream
 
         if (bookingDAO.insert(booking)) {
             req.setAttribute("success", "Đặt lịch thành công! Vui lòng chờ gia sư xác nhận.");
         } else {
             req.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại!");
-            // ĐÃ THÊM: Nạp lại thông tin gia sư tránh vỡ giao diện khi submit lỗi
-            if (tutorId != null) {
-                req.setAttribute("tutor", tutorDAO.findById(tutorId.trim()));
-                req.setAttribute("courses", courseDAO.findByTutorId(tutorId.trim()));
-            }
-            if (courseId != null) {
-                req.setAttribute("selectedCourse", courseDAO.findById(courseId.trim()));
-            }
         }
 
         req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
-        return;
+=======
+        bookingDAO.insert(booking);
+        resp.sendRedirect(req.getContextPath() + "/dashboard");
+>>>>>>> Stashed changes
     }
 }
