@@ -48,6 +48,34 @@ public class DashboardServlet extends HttpServlet {
             return;
         }
 
+        // Pull session flash messages
+        String success = (String) session.getAttribute("success");
+        if (success != null) {
+            req.setAttribute("success", success);
+            session.removeAttribute("success");
+        }
+        String error = (String) session.getAttribute("error");
+        if (error != null) {
+            req.setAttribute("error", error);
+            session.removeAttribute("error");
+        }
+        if (action != null && bookingId != null && account.getRole() == 2) {
+            if (action.equals("confirm")) {
+                bookingDAO.updateStatus(bookingId, "confirmed");
+                Booking booking = bookingDAO.findById(bookingId);
+                if (booking != null && booking.getCourseId() != null) {
+                    if (!courseDAO.isStudentRegistered(booking.getCourseId(), booking.getStudentId())) {
+                        courseDAO.registerCourse(booking.getCourseId(), booking.getStudentId(), 10, "pending_payment");
+                    }
+                }
+            } else if (action.equals("cancel")) {
+                bookingDAO.updateStatus(bookingId, "rejected");
+            }
+            // Xử lý xong, reload lại trang dashboard để cập nhật trạng thái mới
+            resp.sendRedirect(req.getContextPath() + "/dashboard");
+            return;
+        }
+
         if (account.getRole() == 2) {
             // Tutor dashboard
             Tutor tutor = (Tutor) session.getAttribute("userProfile");

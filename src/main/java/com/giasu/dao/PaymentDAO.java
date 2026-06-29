@@ -98,8 +98,8 @@ public class PaymentDAO {
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                String lastId = rs.getString("id");
-                int num = Integer.parseInt(lastId.replace("pay", "")) + 1;
+                String lastId = rs.getString("id").trim();
+                int num = Integer.parseInt(lastId.replace("pay", "").trim()) + 1;
                 return String.format("pay%03d", num);
             }
         } catch (SQLException e) { e.printStackTrace(); }
@@ -112,8 +112,8 @@ public class PaymentDAO {
         PreparedStatement ps = conn.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
         if (rs.next()) {
-            String lastId = rs.getString("id");
-            int num = Integer.parseInt(lastId.replace("pay", "")) + 1;
+            String lastId = rs.getString("id").trim();
+            int num = Integer.parseInt(lastId.replace("pay", "").trim()) + 1;
             return String.format("pay%03d", num);
         }
         return "pay001";

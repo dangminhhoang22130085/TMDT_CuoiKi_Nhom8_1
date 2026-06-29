@@ -22,12 +22,6 @@ public class BookingServlet extends HttpServlet {
         Account account = (Account) session.getAttribute("account");
 
         String action = req.getParameter("action");
-        String courseId = req.getParameter("courseId");
-        String tutorId = req.getParameter("tutorId");
-        String id = req.getParameter("id");
-
-        if (courseId != null) courseId = courseId.trim();
-        if (tutorId != null) tutorId = tutorId.trim();
 
         if ("confirm".equals(action) || "cancel".equals(action)) {
             String bookingId = req.getParameter("id");
@@ -63,6 +57,10 @@ public class BookingServlet extends HttpServlet {
             return;
         }
 
+        // Show booking form
+        String courseId = req.getParameter("courseId");
+        String tutorId = req.getParameter("tutorId");
+
         if (tutorId != null) {
             Tutor tutor = tutorDAO.findById(tutorId);
             List<Course> courses = courseDAO.findByTutorId(tutorId);
@@ -74,12 +72,8 @@ public class BookingServlet extends HttpServlet {
             req.setAttribute("selectedCourse", course);
         }
 
-
-// Thêm dòng này để kết thúc luồng hiển thị form đặt lịch
         req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
     }
-
-
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -88,7 +82,7 @@ public class BookingServlet extends HttpServlet {
         Student student = (Student) session.getAttribute("userProfile");
 
         if (student == null) {
-            resp.sendRedirect(req.getContextPath() + "/jsp/auth/login.jsp");
+            resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
@@ -124,17 +118,8 @@ public class BookingServlet extends HttpServlet {
             req.setAttribute("success", "Đặt lịch thành công! Vui lòng chờ gia sư xác nhận.");
         } else {
             req.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại!");
-            // ĐÃ THÊM: Nạp lại thông tin gia sư tránh vỡ giao diện khi submit lỗi
-            if (tutorId != null) {
-                req.setAttribute("tutor", tutorDAO.findById(tutorId.trim()));
-                req.setAttribute("courses", courseDAO.findByTutorId(tutorId.trim()));
-            }
-            if (courseId != null) {
-                req.setAttribute("selectedCourse", courseDAO.findById(courseId.trim()));
-            }
         }
 
         req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
-        return;
     }
 }

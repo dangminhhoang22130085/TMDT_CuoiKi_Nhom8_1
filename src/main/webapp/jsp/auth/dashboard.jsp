@@ -47,9 +47,9 @@
 
                         <div class="dash-card">
                             <i class="fas fa-wallet"></i>
-                            <h3>So Du Tai Khoan</h3>
+                            <h3>Số Dư Tài Khoản</h3>
                             <p class="dash-value">${requestScope.balance}</p>
-                            <a href="${pageContext.request.contextPath}/wallet">Quan Ly Vi</a>
+                            <a href="#">Nạp Tiền</a>
                         </div>
                     </div>
 
@@ -94,13 +94,12 @@
                                                             </a>
                                                         </c:when>
                                                         <c:when test="${b.status eq 'confirmed'}">
-                                                            <a href="${pageContext.request.contextPath}/payment?courseId=${b.courseId}&tutorId=${b.tutorId}" class="btn btn-sm btn-success" style="margin-right: 5px;">
+                                                            <a href="<c:url value='/payment?courseId=${b.courseId}&amp;tutorId=${b.tutorId}&amp;amount=2000000'/>" class="btn btn-sm btn-success" style="margin-right: 5px;">
                                                                 <i class="fas fa-credit-card"></i> Thanh Toán
                                                             </a>
-                                                            <button type="button" class="btn btn-sm btn-warning"
-                                                                    onclick="openFeedbackModal('${b.id}', '${b.studentId}', '${b.tutorId}', '${b.courseId}', `${b.tutor.name}`)">
-                                                                <i class="fas fa-exclamation-triangle"></i> Khiếu Nại / Đánh Giá
-                                                            </button>
+                                                            <a href="<c:url value='/complaint?bookingId=${b.id}'/>" class="btn btn-sm btn-warning">
+                                                                <i class="fas fa-exclamation-triangle"></i> Khiếu Nại
+                                                            </a>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <span style="color: var(--gray-400);">Không có hành động</span>
@@ -113,59 +112,6 @@
                                     <c:otherwise>
                                         <tr class="empty-row">
                                             <td colspan="5" style="text-align: center;">Chưa có lịch học</td>
-                                        </tr>
-                                    </c:otherwise>
-                                </c:choose>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="section-card" style="margin-top: 2rem;">
-                        <h2>Lịch Sử Thanh Toán & Hóa Đơn</h2>
-                        <div style="text-align:right; margin-bottom: 0.5rem;">
-                            <a href="${pageContext.request.contextPath}/wallet" class="btn btn-sm" style="background: linear-gradient(135deg,#6c63ff,#3ecf8e); color:white; padding: 6px 14px; border-radius: 20px; text-decoration:none;">
-                                <i class="fas fa-wallet"></i> Quản Lý Ví
-                            </a>
-                        </div>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Mã Giao Dịch</th>
-                                    <th>Loại GD</th>
-                                    <th>Gia Sư</th>
-                                    <th>Số Tiền</th>
-                                    <th>Ngày Thanh Toán</th>
-                                    <th>Phương Thức</th>
-                                    <th>Trạng Thái</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:choose>
-                                    <c:when test="${not empty requestScope.payments}">
-                                        <c:forEach var="p" items="${requestScope.payments}">
-                                            <tr>
-                                                <td><strong>${p.id}</strong></td>
-                                                <td>
-                                                    <span style="font-size:0.8rem; font-weight:600; padding:3px 8px; border-radius:12px;
-                                                        background-color: ${p.paymentType eq 'DEPOSIT' ? '#d4edda' : (p.paymentType eq 'WITHDRAW' ? '#f8d7da' : '#cce5ff')};
-                                                        color: ${p.paymentType eq 'DEPOSIT' ? '#155724' : (p.paymentType eq 'WITHDRAW' ? '#721c24' : '#004085')};">
-                                                        ${p.typeDisplay}
-                                                    </span>
-                                                </td>
-                                                <td>${p.tutor.name}</td>
-                                                <td><span style="color: #e74c3c; font-weight: 600;">${p.getSignedFormattedAmount(1)}</span></td>
-                                                <td>${p.paymentDate}</td>
-                                                <td>${p.methodDisplay}</td>
-                                                <td>
-                                                    <span class="badge" style="background-color: ${p.status eq 'completed' ? '#2ecc71' : (p.status eq 'pending' ? '#f39c12' : '#e74c3c')}; color: white; padding: 4px 8px; border-radius: 4px;">
-                                                        ${p.statusDisplay}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <tr class="empty-row">
-                                            <td colspan="7" style="text-align: center;">Chưa có lịch sử thanh toán</td>
                                         </tr>
                                     </c:otherwise>
                                 </c:choose>
@@ -190,16 +136,9 @@
                         </div>
 
                         <div class="dash-card">
-                            <i class="fas fa-coins"></i>
-                            <h3>Thu Nhập (Hoàn Tất)</h3>
+                            <i class="fas fa-wallet"></i>
+                            <h3>Thu Nhập Tháng Này</h3>
                             <p class="dash-value">${requestScope.monthlyIncome}</p>
-                        </div>
-
-                        <div class="dash-card" style="cursor:pointer;" onclick="window.location='${pageContext.request.contextPath}/wallet'">
-                            <i class="fas fa-wallet" style="color:#6c63ff;"></i>
-                            <h3>Số Dư Ví</h3>
-                            <p class="dash-value" style="color:#6c63ff;">${requestScope.tutorBalance}</p>
-                            <a href="${pageContext.request.contextPath}/wallet" style="font-size:0.8rem;">Rút Tiền &rarr;</a>
                         </div>
 
                         <div class="dash-card">
@@ -208,41 +147,6 @@
                             <p class="dash-value">${requestScope.averageRating} / 5</p>
                         </div>
                     </div>
-
-
-                    <div class="section-card" style="margin-bottom: 2rem;">
-                        <h2><i class="fas fa-plus-circle"></i> Tạo Khóa Học Mới</h2>
-                        <form action="<c:url value='/dashboard'/>" method="post" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
-                            <input type="hidden" name="action" value="createCourse">
-
-                            <div class="form-group">
-                                <label>Tên Môn Học</label>
-                                <input type="text" name="name" class="form-control" placeholder="VD: Toán Nâng Cao" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Lớp / Trình Độ</label>
-                                <input type="text" name="level" class="form-control" placeholder="VD: Lớp 10, IELTS 6.5" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Học Phí (VNĐ / Giờ)</label>
-                                <input type="number" name="fee" class="form-control" placeholder="VD: 200000" required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Mô tả chi tiết</label>
-                                <input type="text" name="description" class="form-control" placeholder="Tóm tắt nội dung học..." required style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
-                            </div>
-
-                            <div class="form-group" style="grid-column: 1 / -1;">
-                                <button type="submit" class="btn btn-primary" style="padding: 10px 20px;"><i class="fas fa-save"></i> Đăng Khóa Học</button>
-                            </div>
-                        </form>
-                    </div>
-
-
-
 
                     <div class="section-card">
                         <h2>Lịch Dạy</h2>
@@ -280,10 +184,10 @@
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${b.status eq 'pending'}">
-                                                            <a href="${pageContext.request.contextPath}/dashboard?action=confirm&id=${b.id}" class="btn btn-sm btn-success" style="margin-right: 5px;">
+                                                            <a href="<c:url value='/booking?action=confirm&amp;id=${b.id}'/>" class="btn btn-sm btn-success" style="margin-right: 5px;">
                                                                 <i class="fas fa-check"></i> Chấp Nhận
                                                             </a>
-                                                            <a href="${pageContext.request.contextPath}/dashboard?action=cancel&id=${b.id}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn từ chối lịch học này?');">
+                                                            <a href="<c:url value='/booking?action=cancel&amp;id=${b.id}'/>" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn từ chối lịch học này?');">
                                                                 <i class="fas fa-times"></i> Từ Chối
                                                             </a>
                                                         </c:when>
@@ -304,82 +208,12 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="section-card" style="margin-top: 2rem;">
-                        <h2>Lịch Sử Doanh Thu & Thanh Toán</h2>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Mã Hóa Đơn</th>
-                                    <th>Loại GD</th>
-                                    <th>Học Sinh</th>
-                                    <th>Số Tiền</th>
-                                    <th>Ngày Thanh Toán</th>
-                                    <th>Phương Thức</th>
-                                    <th>Trạng Thái</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:choose>
-                                    <c:when test="${not empty requestScope.payments}">
-                                        <c:forEach var="p" items="${requestScope.payments}">
-                                            <tr>
-                                                <td><strong>${p.id}</strong></td>
-                                                <td>
-                                                    <span style="font-size:0.8rem; font-weight:600; padding:3px 8px; border-radius:12px;
-                                                        background-color: ${p.paymentType eq 'DEPOSIT' ? '#d4edda' : (p.paymentType eq 'WITHDRAW' ? '#f8d7da' : '#cce5ff')};
-                                                        color: ${p.paymentType eq 'DEPOSIT' ? '#155724' : (p.paymentType eq 'WITHDRAW' ? '#721c24' : '#004085')};">
-                                                        ${p.typeDisplay}
-                                                    </span>
-                                                </td>
-                                                <td>${p.student.name}</td>
-                                                <td><span style="color: #2ecc71; font-weight: 600;">${p.getSignedFormattedAmount(2)}</span></td>
-                                                <td>${p.paymentDate}</td>
-                                                <td>${p.methodDisplay}</td>
-                                                <td>
-                                                    <span class="badge" style="background-color: ${p.status eq 'completed' ? '#2ecc71' : (p.status eq 'pending' ? '#f39c12' : '#e74c3c')}; color: white; padding: 4px 8px; border-radius: 4px;">
-                                                        ${p.statusDisplay}
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        </c:forEach>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <tr class="empty-row">
-                                            <td colspan="7" style="text-align: center;">Chưa có lịch sử nhận thanh toán</td>
-                                        </tr>
-                                    </c:otherwise>
-                                </c:choose>
-                            </tbody>
-                        </table>
-                    </div>
                 </c:if>
             </section>
         </main>
     </div>
-            <jsp:include page="/layout/feedback-modal.jsp"/>
-            <jsp:include page="/layout/footer.jsp"/>
 
-            <script src="<c:url value='/js/main.js'/>"></script>
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const status = urlParams.get('status');
-                    const msgType = urlParams.get('msgType');
-
-                    if (status === 'success') {
-                        if (msgType === 'review') {
-                            showNotification('Đăng đánh giá công khai thành công!', 'success');
-                        } else if (msgType === 'complaint') {
-                            showNotification('Gửi khiếu nại tới Ban quản trị thành công!', 'success');
-                        }
-                        // Xóa param trên url để nhìn chuyên nghiệp hơn
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                    } else if (status === 'fail') {
-                        showNotification('Có lỗi hệ thống xảy ra, vui lòng thực hiện lại!', 'error');
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                    }
-                });
-            </script>
+    <jsp:include page="/layout/footer.jsp"/>
+    <script src="<c:url value='/js/main.js'/>"></script>
 </body>
 </html>
-

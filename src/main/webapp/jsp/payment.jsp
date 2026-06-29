@@ -1,35 +1,78 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Thanh Toán | TutorHub</title>
-
-    <link
-            rel="stylesheet"
-            href="<c:url value='/css/main.css'/>"
-    >
-
-    <link
-            rel="stylesheet"
-            href="<c:url value='/css/booking.css'/>"
-    >
-
-    <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán Học Phí | TutorHub</title>
+    <link rel="stylesheet" href="<c:url value='/css/main.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/booking.css'/>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Extra styles for payment page */
+        .wallet-balance-box {
+            margin-top: 1.2rem;
+            padding: 1rem 1.2rem;
+            background: linear-gradient(135deg, rgba(108,99,255,0.08), rgba(162,155,254,0.06));
+            border: 1px solid rgba(108,99,255,0.25);
+            border-radius: 12px;
+        }
+        .wallet-balance-box .label {
+            font-size: 0.82rem;
+            color: var(--color-muted, #94a3b8);
+            margin-bottom: 0.3rem;
+            display: flex; align-items: center; gap: 0.4rem;
+        }
+        .wallet-balance-box .amount {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #6c63ff;
+        }
+        .wallet-balance-box .insufficient-warn {
+            margin-top: 0.5rem;
+            font-size: 0.83rem;
+            color: #e74c3c;
+            display: flex; align-items: center; gap: 0.4rem;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            font-size: 0.9rem;
+        }
+        .summary-row:last-child { border-bottom: none; }
+        .summary-row .key { color: var(--color-muted, #94a3b8); }
+        .summary-row .val { font-weight: 600; }
+        .price-big { font-size: 1.5rem; font-weight: 800; color: #e74c3c; }
+        .history-section { margin-top: 2.5rem; }
+        .history-section h3 {
+            font-size: 1.05rem; font-weight: 600; margin-bottom: 1rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .history-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+        .history-table th {
+            text-align: left; padding: 0.7rem 1rem;
+            background: rgba(255,255,255,0.04);
+            font-weight: 600; font-size: 0.78rem;
+            text-transform: uppercase; letter-spacing: 0.05em;
+            color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+        .history-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .history-table tr:last-child td { border-bottom: none; }
+        .history-table tr:hover td { background: rgba(255,255,255,0.02); }
+        .badge-ok     { background: rgba(46,204,113,0.12); color: #2ecc71; padding: 0.25em 0.65em; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+        .badge-type   { background: rgba(108,99,255,0.12); color: #a29bfe; padding: 0.25em 0.65em; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+        .amt-out { color: #e74c3c; font-weight: 600; }
+        .amt-in  { color: #2ecc71; font-weight: 600; }
+    </style>
 </head>
 
 <body>
@@ -44,13 +87,13 @@
 
             <i class="fas fa-credit-card"></i>
 
-            Thanh Toán Học Phí
+            Thanh Toán
 
         </h1>
 
         <p>
 
-            Xác nhận thanh toán từ ví điện tử TutorHub
+            Hoàn tất thanh toán khóa học
 
         </p>
 
@@ -116,7 +159,7 @@
 
                         <strong>Khóa Học:</strong>
 
-                        ${requestScope.course.subject.name}
+                        ${requestScope.course.name}
 
                     </p>
 
@@ -124,19 +167,10 @@
 
                         <strong>Học Phí:</strong>
 
-                        <span style="font-size:1.3rem; font-weight:700; color:#e74c3c;">${requestScope.course.subject.formattedFee}</span>
+                        ${requestScope.course.price} VNĐ
 
                     </p>
 
-                </div>
-
-                <!-- Student wallet balance info -->
-                <div style="margin-top: 1rem; padding: 0.75rem 1rem; background: linear-gradient(135deg, #f0f4ff, #e8f5e9); border-radius: 10px; border-left: 4px solid #6c63ff;">
-                    <p style="margin: 0; font-size: 0.9rem; color: #555;"><i class="fas fa-wallet" style="color:#6c63ff;"></i> <strong>Số dư ví hiện tại của bạn:</strong></p>
-                    <p style="margin: 4px 0 0 0; font-size: 1.2rem; font-weight: 700; color: #6c63ff;">${requestScope.balance} VND</p>
-                    <c:if test="${requestScope.insufficient}">
-                        <p style="margin: 6px 0 0 0; color: #e74c3c; font-size: 0.85rem;"><i class="fas fa-exclamation-triangle"></i> Số dư không đủ. <a href="${pageContext.request.contextPath}/wallet">Nạp thêm tiền &rarr;</a></p>
-                    </c:if>
                 </div>
 
             </div>
@@ -181,7 +215,7 @@
                             type="number"
                             name="amount"
                             class="form-input"
-                            value="${requestScope.course.subject.fee}"
+                            value="${requestScope.course.price}"
                             readonly
                     >
 
@@ -199,21 +233,15 @@
                             required
                     >
 
-                        <option value="wallet" selected>
-
-                            Ví Điện Tử TutorHub
-
-                        </option>
-
                         <option value="bank_transfer">
 
                             Chuyển Khoản Ngân Hàng
 
                         </option>
 
-                        <option value="momo">
+                        <option value="vnpay">
 
-                            MoMo
+                            VNPay
 
                         </option>
 
