@@ -43,6 +43,7 @@ CREATE TABLE student (
     description TEXT NULL,
     avatar VARCHAR(255) DEFAULT 'default-avatar.png',
     account_id CHAR(20),
+    balance DECIMAL(12) NOT NULL DEFAULT 0,
     FOREIGN KEY (account_id) REFERENCES account(id)
 );
 
@@ -77,6 +78,7 @@ CREATE TABLE tutor (
     account_id CHAR(20),
     evaluate INT DEFAULT 0 CHECK (evaluate BETWEEN 0 AND 5),
     verified SMALLINT DEFAULT 0,
+    balance DECIMAL(12) NOT NULL DEFAULT 0,
     FOREIGN KEY (account_id) REFERENCES account(id)
 );
 
@@ -158,13 +160,14 @@ CREATE TABLE complaint (
 -- ============================================
 CREATE TABLE payment (
     id CHAR(20) PRIMARY KEY,
-    course_id CHAR(20) NOT NULL,
-    tutor_id CHAR(20) NOT NULL,
-    student_id CHAR(20) NOT NULL,
+    course_id CHAR(20) NULL,
+    tutor_id CHAR(20) NULL,
+    student_id CHAR(20) NULL,
     amount DECIMAL(12) NOT NULL,
     payment_date TIMESTAMP NOT NULL,
     payment_method VARCHAR(50) DEFAULT 'bank_transfer',
     status VARCHAR(50) NOT NULL CHECK (status IN ('completed', 'pending', 'failed')),
+    payment_type VARCHAR(50) DEFAULT 'PAYMENT',
     FOREIGN KEY (course_id) REFERENCES course(id),
     FOREIGN KEY (tutor_id) REFERENCES tutor(id),
     FOREIGN KEY (student_id) REFERENCES student(id)

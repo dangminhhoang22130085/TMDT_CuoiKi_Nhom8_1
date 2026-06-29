@@ -97,6 +97,32 @@ public class StudentDAO {
         st.setDescription(rs.getString("description"));
         try { st.setAvatar(rs.getString("avatar")); } catch (Exception e) {}
         st.setAccountId(rs.getString("account_id"));
+        try { st.setBalance(rs.getLong("balance")); } catch (Exception e) {}
         return st;
+    }
+
+    public long getBalance(String studentId) {
+        String sql = "SELECT balance FROM student WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, studentId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong("balance");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public boolean updateBalance(String studentId, long amount, Connection conn) throws SQLException {
+        String sql = "UPDATE student SET balance = balance + ? WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, amount);
+            ps.setString(2, studentId);
+            return ps.executeUpdate() > 0;
+        }
     }
 }

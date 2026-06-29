@@ -11,6 +11,7 @@ public class Student {
     private String description;
     private String avatar;
     private String accountId;
+    private long balance;
 
     public Student() {}
 
@@ -22,6 +23,17 @@ public class Student {
         this.birth = birth;
         this.description = description;
         this.accountId = accountId;
+    }
+
+    public Student(String id, String name, String phone, String address, Date birth, String description, String accountId, long balance) {
+        this.id = id;
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+        this.birth = birth;
+        this.description = description;
+        this.accountId = accountId;
+        this.balance = balance;
     }
 
     public String getId() { return id; }
@@ -47,4 +59,7 @@ public class Student {
 
     public String getAccountId() { return accountId; }
     public void setAccountId(String accountId) { this.accountId = accountId; }
+
+    public long getBalance() { return balance; }
+    public void setBalance(long balance) { this.balance = balance; }
 }
