@@ -75,10 +75,10 @@ public class TutorDAO {
         List<Tutor> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
                 "SELECT t.*, " +
-                "(SELECT COUNT(DISTINCT rs.student_id) FROM course c JOIN registered_subjects rs ON c.id = rs.course_id WHERE c.tutor_id = t.id) as total_students, " +
-                "(SELECT COUNT(*) FROM course WHERE tutor_id = t.id) as total_courses, " +
-                "(SELECT COUNT(*) FROM review WHERE tutor_id = t.id) as total_reviews " +
-                "FROM tutor t JOIN account a ON t.account_id = a.id WHERE t.verified = 1 AND a.status = 'active'");
+                        "(SELECT COUNT(DISTINCT rs.student_id) FROM course c JOIN registered_subjects rs ON c.id = rs.course_id WHERE c.tutor_id = t.id) as total_students, " +
+                        "(SELECT COUNT(*) FROM course WHERE tutor_id = t.id) as total_courses, " +
+                        "(SELECT COUNT(*) FROM review WHERE tutor_id = t.id) as total_reviews " +
+                        "FROM tutor t JOIN account a ON t.account_id = a.id WHERE t.verified = 1 AND a.status = 'active'");
 
         List<Object> params = new ArrayList<>();
 
@@ -145,7 +145,7 @@ public class TutorDAO {
             ps.setString(11, t.getBankName());
             ps.setString(12, t.getAccountId());
             ps.setInt(13, t.getEvaluate());
-            ps.setBoolean(14, t.isVerified());
+            ps.setInt(14, t.isVerified() ? 1 : 0);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) { e.printStackTrace(); }
         return false;
@@ -174,7 +174,7 @@ public class TutorDAO {
         String sql = "UPDATE tutor SET verified = ? WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setBoolean(1, verified);
+            ps.setInt(1, verified ? 1 : 0);
             ps.setString(2, id);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) { e.printStackTrace(); }
@@ -197,12 +197,22 @@ public class TutorDAO {
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
+
             if (rs.next()) {
-                String lastId = rs.getString("id");
-                int num = Integer.parseInt(lastId.replace("tut", "")) + 1;
+
+                String lastId = rs.getString("id").trim();
+
+                int num = Integer.parseInt(
+                        lastId.replace("tut", "").trim()
+                ) + 1;
+
                 return String.format("tut%03d", num);
             }
-        } catch (SQLException e) { e.printStackTrace(); }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return "tut001";
     }
 
@@ -223,6 +233,35 @@ public class TutorDAO {
         t.setAccountId(rs.getString("account_id"));
         t.setEvaluate(rs.getInt("evaluate"));
         t.setVerified(rs.getBoolean("verified"));
+        try { t.setBalance(rs.getLong("balance")); } catch (Exception e) {}
         return t;
     }
+
+
+    public long getBalance(String tutorId) {
+        String sql = "SELECT balance FROM tutor WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, tutorId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong("balance");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public boolean updateBalance(String tutorId, long amount, Connection conn) throws SQLException {
+        String sql = "UPDATE tutor SET balance = balance + ? WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, amount);
+            ps.setString(2, tutorId);
+            return ps.executeUpdate() > 0;
+        }
+
+    }
 }
+

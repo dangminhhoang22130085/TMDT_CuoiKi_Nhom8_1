@@ -59,8 +59,8 @@ public class ReviewDAO {
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                String lastId = rs.getString("id");
-                int num = Integer.parseInt(lastId.replace("rev", "")) + 1;
+                String lastId = rs.getString("id").trim();
+                int num = Integer.parseInt(lastId.replace("rev", "").trim()) + 1;
                 return String.format("rev%03d", num);
             }
         } catch (SQLException e) { e.printStackTrace(); }

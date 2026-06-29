@@ -14,6 +14,7 @@ public class AdminServlet extends HttpServlet {
     private TutorDAO tutorDAO = new TutorDAO();
     private PaymentDAO paymentDAO = new PaymentDAO();
     private BookingDAO bookingDAO = new BookingDAO();
+    private ComplaintDAO complaintDAO = new ComplaintDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -32,6 +33,9 @@ public class AdminServlet extends HttpServlet {
                 break;
             case "/tutors":
                 showTutorVerification(req, resp);
+                break;
+            case "/complaints":
+                showComplaints(req, resp);
                 break;
             default:
                 showDashboard(req, resp);
@@ -70,6 +74,16 @@ public class AdminServlet extends HttpServlet {
             paymentDAO.updateStatus(paymentId, status);
             resp.sendRedirect(req.getContextPath() + "/admin/payments");
 
+        } else if ("resolveComplaint".equals(action)) {
+            String complaintId = req.getParameter("complaintId");
+            complaintDAO.updateStatus(complaintId, "resolved");
+            resp.sendRedirect(req.getContextPath() + "/admin/complaints");
+
+        } else if ("rejectComplaint".equals(action)) {
+            String complaintId = req.getParameter("complaintId");
+            complaintDAO.updateStatus(complaintId, "rejected");
+            resp.sendRedirect(req.getContextPath() + "/admin/complaints");
+
         } else {
             resp.sendRedirect(req.getContextPath() + "/admin/dashboard");
         }
@@ -84,9 +98,12 @@ public class AdminServlet extends HttpServlet {
 
         req.setAttribute("totalStudents", totalStudents);
         req.setAttribute("totalTutors", totalTutors);
-        req.setAttribute("totalRevenue", totalRevenue);
+        req.setAttribute("totalUsers", totalStudents + totalTutors);
+        req.setAttribute("totalRevenue", String.format("%,d VNĐ", totalRevenue));
         req.setAttribute("pendingTutors", pendingTutors);
+        req.setAttribute("pendingTutorsCount", pendingTutors.size());
         req.setAttribute("recentBookings", recentBookings);
+        req.setAttribute("totalBookings", recentBookings.size());
         req.getRequestDispatcher("/jsp/admin/dashboard.jsp").forward(req, resp);
     }
 
@@ -100,7 +117,7 @@ public class AdminServlet extends HttpServlet {
         List<Payment> payments = paymentDAO.findAll();
         long totalRevenue = paymentDAO.getTotalRevenue();
         req.setAttribute("payments", payments);
-        req.setAttribute("totalRevenue", totalRevenue);
+        req.setAttribute("totalRevenue", String.format("%,d VNĐ", totalRevenue));
         req.getRequestDispatcher("/jsp/admin/payments.jsp").forward(req, resp);
     }
 
@@ -110,5 +127,11 @@ public class AdminServlet extends HttpServlet {
         req.setAttribute("pendingTutors", pendingTutors);
         req.setAttribute("allTutors", allTutors);
         req.getRequestDispatcher("/jsp/admin/tutors.jsp").forward(req, resp);
+    }
+
+    private void showComplaints(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        List<Complaint> complaints = complaintDAO.findAll();
+        req.setAttribute("complaints", complaints);
+        req.getRequestDispatcher("/jsp/admin/complaints.jsp").forward(req, resp);
     }
 }

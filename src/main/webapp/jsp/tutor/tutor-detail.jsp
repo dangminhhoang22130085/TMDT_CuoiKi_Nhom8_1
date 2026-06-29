@@ -48,8 +48,8 @@
                 <div class="detail-rating">
                     <div class="stars">
                         <c:choose>
-                            <c:when test="${requestScope.tutor.evaluate > 0}">
-                                <c:forEach begin="1" end="${requestScope.tutor.evaluate}">
+                            <c:when test="${requestScope.avgRating > 0}">
+                                <c:forEach begin="1" end="${requestScope.avgRating}">
                                     <i class="fas fa-star"></i>
                                 </c:forEach>
                             </c:when>
@@ -60,20 +60,20 @@
                             </c:otherwise>
                         </c:choose>
                     </div>
-                    <span><strong>${requestScope.tutor.evaluate} / 5</strong> (${requestScope.tutor.totalReviews} đánh giá)</span>
+                    <span><strong>${requestScope.avgRating} / 5</strong> (${requestScope.totalReviews} đánh giá)</span>
                 </div>
 
                 <div class="detail-stats">
                     <div class="stat">
-                        <h4>${requestScope.tutor.totalStudents}</h4>
+                        <h4>${requestScope.totalStudents}</h4>
                         <p>Học Sinh Đã Học</p>
                     </div>
                     <div class="stat">
-                        <h4>${requestScope.tutor.totalCourses}</h4>
+                        <h4>${requestScope.totalCourses}</h4>
                         <p>Lớp Học Mở</p>
                     </div>
                     <div class="stat">
-                        <h4>${requestScope.tutor.totalReviews}</h4>
+                        <h4>${requestScope.totalReviews}</h4>
                         <p>Lượt Phản Hồi</p>
                     </div>
                 </div>
@@ -113,11 +113,18 @@
                                 <div class="course-footer">
                                     <span class="course-price">${course.subject.fee}đ/giờ</span>
 
-                                    <c:if test="${not empty sessionScope.account and sessionScope.account.role eq 1}">
-                                        <a href="${pageContext.request.contextPath}/booking?courseId=${course.id}&amp;tutorId=${requestScope.tutor.id}" class="btn btn-sm btn-primary">
-                                            Chọn Lớp
-                                        </a>
-                                    </c:if>
+                                    <c:choose>
+                                        <c:when test="${not empty sessionScope.account and sessionScope.account.role eq 1}">
+                                            <a href="${pageContext.request.contextPath}/booking?courseId=${course.id}&amp;tutorId=${requestScope.tutor.id}" class="btn btn-sm btn-primary">
+                                                Chọn Lớp
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a href="${pageContext.request.contextPath}/jsp/auth/login.jsp?redirect=${pageContext.request.contextPath}/booking?courseId=${course.id}%26tutorId=${requestScope.tutor.id}" class="btn btn-sm btn-primary">
+                                                Chọn Lớp
+                                            </a>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                             </div>
                         </c:forEach>
@@ -127,10 +134,35 @@
 
             <div class="content-section">
                 <h3><i class="fas fa-comments"></i> Phản Hồi Từ Phụ Huynh & Học Sinh</h3>
-                <p style="color: var(--gray-500); font-style: italic; text-align: center; padding: 1rem 0;">
-                    <i class="fas fa-comment-slash" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; color: var(--gray-300);"></i>
-                    Các đánh giá chi tiết của lớp học sẽ tự động tải lên từ hệ thống cơ sở dữ liệu.
-                </p>
+                <c:choose>
+                    <c:when test="${not empty requestScope.reviews}">
+                        <div class="reviews-list" style="display: flex; flex-direction: column; gap: 15px;">
+                            <c:forEach var="rev" items="${requestScope.reviews}">
+                                <div class="review-card" style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                    <div class="review-card-header" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                        <span style="font-weight: bold; color: #1e293b;"><i class="fas fa-user-circle"></i> ${rev.student.name}</span>
+                                        <span style="color: #f59e0b;">
+                                            <c:forEach begin="1" end="${rev.rating}">
+                                                <i class="fas fa-star"></i>
+                                            </c:forEach>
+                                            <c:forEach begin="${rev.rating + 1}" end="5">
+                                                <i class="far fa-star" style="color: #cbd5e1;"></i>
+                                            </c:forEach>
+                                        </span>
+                                    </div>
+                                    <p style="margin: 0; color: #475569;">${rev.comment}</p>
+                                    <small style="color: #94a3b8; display: block; margin-top: 5px;">${rev.createdAt}</small>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <p style="color: var(--gray-500); font-style: italic; text-align: center; padding: 1rem 0;">
+                            <i class="fas fa-comment-slash" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem; color: var(--gray-300);"></i>
+                            Gia sư này chưa có phản hồi nào từ phụ huynh & học sinh.
+                        </p>
+                    </c:otherwise>
+                </c:choose>
             </div>
 
         </div>

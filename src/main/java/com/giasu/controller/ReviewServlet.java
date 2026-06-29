@@ -10,6 +10,7 @@ import java.io.IOException;
 @WebServlet("/review")
 public class ReviewServlet extends HttpServlet {
     private ReviewDAO reviewDAO = new ReviewDAO();
+    private TutorDAO tutorDAO = new TutorDAO();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -41,6 +42,10 @@ public class ReviewServlet extends HttpServlet {
         }
 
         reviewDAO.insert(review);
+
+        // Cập nhật điểm đánh giá trung bình của gia sư
+        double avgRating = reviewDAO.getAverageRating(tutorId);
+        tutorDAO.updateEvaluate(tutorId, avgRating);
 
         resp.sendRedirect(req.getContextPath() + "/tutor-detail?id=" + tutorId);
     }

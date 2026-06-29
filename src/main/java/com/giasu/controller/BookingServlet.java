@@ -20,29 +20,63 @@ public class BookingServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
         Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
 
         String action = req.getParameter("action");
 
+        String courseId = req.getParameter("courseId");
+        if (courseId != null) courseId = courseId.trim();
+        String tutorId = req.getParameter("tutorId");
+        if (tutorId != null) tutorId = tutorId.trim();
+        String id = req.getParameter("id");
+
+
         if ("confirm".equals(action) || "cancel".equals(action)) {
-            // Tutor confirms or cancels booking
             String bookingId = req.getParameter("id");
-            String status = "confirm".equals(action) ? "confirmed" : "cancelled";
-            bookingDAO.updateStatus(bookingId, status);
+            Booking booking = bookingDAO.findById(bookingId);
+            if (booking != null) {
+                boolean authorized = false;
+                if (account.getRole() == 3) {
+                    authorized = true;
+                } else if (account.getRole() == 2) {
+                    Tutor tutor = (Tutor) session.getAttribute("userProfile");
+                    if (tutor != null && booking.getTutorId().equals(tutor.getId())) {
+                        authorized = true;
+                    }
+                } else if (account.getRole() == 1 && "cancel".equals(action)) {
+                    Student student = (Student) session.getAttribute("userProfile");
+                    if (student != null && booking.getStudentId().equals(student.getId())) {
+                        authorized = true;
+                    }
+                }
+
+                if (authorized) {
+                    String status = "confirm".equals(action) ? "confirmed" : "cancelled";
+                    bookingDAO.updateStatus(bookingId, status);
+
+                    if ("confirmed".equals(status) && booking.getCourseId() != null) {
+                        if (!courseDAO.isStudentRegistered(booking.getCourseId(), booking.getStudentId())) {
+                            courseDAO.registerCourse(booking.getCourseId(), booking.getStudentId(), 10, "pending_payment");
+                        }
+                    }
+                }
+            }
             resp.sendRedirect(req.getContextPath() + "/dashboard");
             return;
         }
 
-        // Show booking form
-        String courseId = req.getParameter("courseId");
-        String tutorId = req.getParameter("tutorId");
 
-        if (tutorId != null) {
+        // Show booking form
+        if (tutorId != null && !tutorId.isEmpty()) {
             Tutor tutor = tutorDAO.findById(tutorId);
             List<Course> courses = courseDAO.findByTutorId(tutorId);
             req.setAttribute("tutor", tutor);
             req.setAttribute("courses", courses);
         }
-        if (courseId != null) {
+        if (courseId != null && !courseId.isEmpty()) {
             Course course = courseDAO.findById(courseId);
             req.setAttribute("selectedCourse", course);
         }
@@ -62,9 +96,22 @@ public class BookingServlet extends HttpServlet {
         }
 
         String courseId = req.getParameter("courseId");
+        if (courseId != null)
+            courseId = courseId.trim();
         String tutorId = req.getParameter("tutorId");
+        if (tutorId != null)
+            tutorId = tutorId.trim();
         String bookingTimeStr = req.getParameter("bookingTime");
         String note = req.getParameter("note");
+
+        if (tutorId == null || tutorId.trim().isEmpty()) {
+            if (courseId != null && !courseId.trim().isEmpty()) {
+                Course c = courseDAO.findById(courseId);
+                if (c != null) {
+                    tutorId = c.getTutorId();
+                }
+            }
+        }
 
         Booking booking = new Booking();
         booking.setId(bookingDAO.generateNextId());
@@ -81,11 +128,11 @@ public class BookingServlet extends HttpServlet {
         }
 
         if (bookingDAO.insert(booking)) {
-            req.setAttribute("success", "Đặt lịch thành công! Vui lòng chờ gia sư xác nhận.");
+            session.setAttribute("success", "Đặt lịch thành công! Vui lòng chờ gia sư xác nhận.");
+            resp.sendRedirect(req.getContextPath() + "/dashboard");
         } else {
             req.setAttribute("error", "Có lỗi xảy ra, vui lòng thử lại!");
+            req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
         }
-
-        req.getRequestDispatcher("/jsp/booking/booking.jsp").forward(req, resp);
     }
 }

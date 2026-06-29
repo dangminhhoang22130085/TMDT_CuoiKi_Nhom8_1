@@ -1,6 +1,7 @@
 package com.giasu.model;
 
 import java.sql.Date;
+import java.util.List;
 
 public class Tutor {
     private String id;
@@ -18,11 +19,15 @@ public class Tutor {
     private String accountId;
     private int evaluate;
     private boolean verified;
+    private long balance;
 
     // Additional display fields
     private int totalStudents;
     private int totalCourses;
     private int totalReviews;
+
+    private List<Course> courses;
+
 
     public Tutor() {}
 
@@ -71,6 +76,9 @@ public class Tutor {
     public boolean isVerified() { return verified; }
     public void setVerified(boolean verified) { this.verified = verified; }
 
+    public long getBalance() { return balance; }
+    public void setBalance(long balance) { this.balance = balance; }
+
     public int getTotalStudents() { return totalStudents; }
     public void setTotalStudents(int totalStudents) { this.totalStudents = totalStudents; }
 
@@ -79,4 +87,12 @@ public class Tutor {
 
     public int getTotalReviews() { return totalReviews; }
     public void setTotalReviews(int totalReviews) { this.totalReviews = totalReviews; }
+
+    public List<Course> getCourses() { return courses; }
+    public void setCourses(List<Course> courses) { this.courses = courses; }
+
+    public long getBalance() { return balance; }
+    public void setBalance(long balance) { this.balance = balance; }
+
 }
+

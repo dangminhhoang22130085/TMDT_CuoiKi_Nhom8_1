@@ -57,7 +57,7 @@ public class AccountDAO {
         String sql = "INSERT INTO account (id, email, password, role, status) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, acc.getId());
+            ps.setString(1, acc.getId().trim());
             ps.setString(2, acc.getEmail());
             ps.setString(3, acc.getPassword());
             ps.setInt(4, acc.getRole());
@@ -100,12 +100,18 @@ public class AccountDAO {
 
     public List<Account> findAll() {
         List<Account> list = new ArrayList<>();
-        String sql = "SELECT * FROM account ORDER BY created_at DESC";
+        String sql = "SELECT a.*, COALESCE(s.name, t.name, 'Admin') as name " +
+                     "FROM account a " +
+                     "LEFT JOIN student s ON a.id = s.account_id " +
+                     "LEFT JOIN tutor t ON a.id = t.account_id " +
+                     "ORDER BY a.created_at DESC";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                list.add(mapRow(rs));
+                Account acc = mapRow(rs);
+                acc.setName(rs.getString("name"));
+                list.add(acc);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -127,18 +133,33 @@ public class AccountDAO {
     }
 
     public String generateNextId() {
+
         String sql = "SELECT id FROM account ORDER BY id DESC LIMIT 1";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+
+        try (
+                Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()
+        ) {
+
             if (rs.next()) {
-                String lastId = rs.getString("id");
-                int num = Integer.parseInt(lastId.replace("acc", "")) + 1;
+
+                // FIX POSTGRESQL CHAR(20)
+                String lastId = rs.getString("id").trim();
+
+                int num = Integer.parseInt(
+                        lastId.replace("acc", "")
+                );
+
+                num++;
+
                 return String.format("acc%03d", num);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return "acc001";
     }
 

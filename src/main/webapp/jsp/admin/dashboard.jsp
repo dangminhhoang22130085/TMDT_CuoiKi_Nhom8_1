@@ -27,28 +27,28 @@
                     <div class="dash-card">
                         <i class="fas fa-users"></i>
                         <h3>Tổng Người Dùng</h3>
-                        <p class="dash-value"><!-- ${totalUsers} --></p>
+                        <p class="dash-value">${requestScope.totalUsers}</p>
                         <small>Học sinh + Gia sư</small>
                     </div>
 
                     <div class="dash-card">
                         <i class="fas fa-chalkboard-user"></i>
                         <h3>Gia Sư Chưa Xác Minh</h3>
-                        <p class="dash-value dash-warning"><!-- ${pendingTutors} --></p>
+                        <p class="dash-value dash-warning">${requestScope.pendingTutorsCount}</p>
                         <a href="<c:url value='/admin/tutors'/>" class="btn btn-sm btn-warning">Xem Chi Tiết</a>
                     </div>
 
                     <div class="dash-card">
                         <i class="fas fa-credit-card"></i>
                         <h3>Tổng Doanh Thu</h3>
-                        <p class="dash-value"><!-- ${totalRevenue} --></p>
-                        <small>Từ đầu năm</small>
+                        <p class="dash-value">${requestScope.totalRevenue}</p>
+                        <small>Thanh toán thành công</small>
                     </div>
 
                     <div class="dash-card">
                         <i class="fas fa-calendar"></i>
                         <h3>Tổng Lớp Học</h3>
-                        <p class="dash-value"><!-- ${totalBookings} --></p>
+                        <p class="dash-value">${requestScope.totalBookings}</p>
                         <small>Tất cả thời gian</small>
                     </div>
                 </div>
@@ -66,10 +66,35 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Expected from backend: recent activities -->
-                            <tr class="empty-row">
-                                <td colspan="4" style="text-align: center;">Chưa có hoạt động</td>
-                            </tr>
+                            <c:choose>
+                                <c:when test="${not empty requestScope.recentBookings}">
+                                    <c:forEach var="b" items="${requestScope.recentBookings}">
+                                        <tr>
+                                            <td><span class="badge badge-info" style="background-color: #3498db; color: white; padding: 2px 6px; border-radius: 4px;">Đặt lịch</span></td>
+                                            <td>Học sinh <strong>${b.student.name}</strong> đăng ký học gia sư <strong>${b.tutor.name}</strong> (${b.tutor.specialization})</td>
+                                            <td>${b.bookingTime}</td>
+                                            <td>
+                                                <c:choose>
+                                                    <c:when test="${b.status eq 'pending'}">
+                                                        <span style="color: #f39c12;"><i class="fas fa-clock"></i> Chờ duyệt</span>
+                                                    </c:when>
+                                                    <c:when test="${b.status eq 'confirmed'}">
+                                                        <span style="color: #2ecc71;"><i class="fas fa-check-circle"></i> Thành công</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span style="color: #e74c3c;"><i class="fas fa-times-circle"></i> Đã hủy</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <tr class="empty-row">
+                                        <td colspan="4" style="text-align: center;">Chưa có hoạt động</td>
+                                    </tr>
+                                </c:otherwise>
+                            </c:choose>
                         </tbody>
                     </table>
                 </div>
