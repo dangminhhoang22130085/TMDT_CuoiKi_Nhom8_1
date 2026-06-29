@@ -25,6 +25,17 @@ public class Student {
         this.accountId = accountId;
     }
 
+    public Student(String id, String name, String phone, String address, Date birth, String description, String accountId, long balance) {
+        this.id = id;
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+        this.birth = birth;
+        this.description = description;
+        this.accountId = accountId;
+        this.balance = balance;
+    }
+
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 

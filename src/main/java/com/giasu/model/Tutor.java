@@ -76,6 +76,9 @@ public class Tutor {
     public boolean isVerified() { return verified; }
     public void setVerified(boolean verified) { this.verified = verified; }
 
+    public long getBalance() { return balance; }
+    public void setBalance(long balance) { this.balance = balance; }
+
     public int getTotalStudents() { return totalStudents; }
     public void setTotalStudents(int totalStudents) { this.totalStudents = totalStudents; }
 
